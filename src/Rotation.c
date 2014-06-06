@@ -16,9 +16,8 @@ Node* leftRotate(Node *parent){
 
 Node* rightRotate(Node *parent){
   Node *root = parent->leftChild;
-  root->rightChild = parent->leftChild->leftChild;
-  root->leftChild = parent;
-  parent ->leftChild = NULL;
+  root->rightChild = parent;
+  parent->leftChild = NULL;
   
   root->leftChild->rank = 0;
   root->rightChild->rank = 0;
