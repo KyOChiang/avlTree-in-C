@@ -157,6 +157,11 @@ void test_leftRotate_to_balance_an_unbalanced_tree(){
   TEST_ASSERT_EQUAL_PTR(&Node10,root->leftChild->leftChild);
   TEST_ASSERT_EQUAL_PTR(&Node70,root->leftChild->rightChild);
   TEST_ASSERT_NULL(Node70.leftChild);
+  TEST_ASSERT_NULL(Node10.leftChild);
+  TEST_ASSERT_NULL(Node200.leftChild);
+  TEST_ASSERT_NULL(Node70.rightChild);
+  TEST_ASSERT_NULL(Node10.rightChild);
+  TEST_ASSERT_NULL(Node200.rightChild);
 }
 
 
