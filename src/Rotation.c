@@ -3,10 +3,15 @@
 #include "Rotation.h"
 
 Node* leftRotate(Node *parent){
+
   Node *root = parent->rightChild;
-  parent->rightChild->leftChild = parent;
-  parent->rightChild = NULL;
-  
+  if(parent->rightChild->leftChild != NULL){
+    parent->rightChild = parent->rightChild->leftChild;
+  }
+  else{
+    parent->rightChild = NULL;
+  }
+  root->leftChild = parent;
   root->leftChild->rank = 0;
   root->rightChild->rank = 0;
   root->rank = 0;

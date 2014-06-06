@@ -129,7 +129,35 @@ void test_getHeight_given_3_elements_should_return_3(){
   TEST_ASSERT_EQUAL(3,height);
 }
 
+/*
+ *        (50)                          (100)
+ *        /  \                          /   \
+ *     (10)  (100)           =>       (50)  (150)
+ *           /   \                    /  \      \
+ *         (70)  (150)             (10)  (70)   (200)
+ *                  \
+ *                  (200)
+ *
+ */
+ 
+void test_leftRotate_to_balance_an_unbalanced_tree(){
+  Node Node200 = {.data=200, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node150 = {.data=150, .rank=1,  .leftChild=NULL, .rightChild = &Node200};
+  Node Node70 = {.data=70, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node100 = {.data=100, .rank=1,  .leftChild=&Node70, .rightChild = &Node150};
+  Node Node10 = {.data=10, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node50 = {.data=50, .rank=2,  .leftChild=&Node10, .rightChild =&Node100};
 
+  Node *root;
+  root = leftRotate(&Node50);
+  TEST_ASSERT_EQUAL_PTR(&Node100, root);
+  TEST_ASSERT_EQUAL_PTR(&Node50,root->leftChild);
+  TEST_ASSERT_EQUAL_PTR(&Node150,root->rightChild);
+  TEST_ASSERT_EQUAL_PTR(&Node200,root->rightChild->rightChild);
+  TEST_ASSERT_EQUAL_PTR(&Node10,root->leftChild->leftChild);
+  TEST_ASSERT_EQUAL_PTR(&Node70,root->leftChild->rightChild);
+  TEST_ASSERT_NULL(Node70.leftChild);
+}
 
 
 
