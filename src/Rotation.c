@@ -26,3 +26,22 @@ Node* rightRotate(Node *parent){
   return root;
 }
 
+Node* doubleRightRotate(Node *parent){
+  Node *leftChild = parent->leftChild->rightChild;
+  Node *root = parent->leftChild;
+  root->rightChild = parent;
+  root->leftChild = leftChild;
+  
+  root->leftChild->rank = 0;
+  root->rightChild->rank = 0;
+  root->rank = 0;
+  
+  return root;
+}
+
+
+
+
+
+
+
