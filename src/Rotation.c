@@ -39,6 +39,34 @@ Node* doubleRightRotate(Node *parent){
   return root;
 }
 
+Node* doubleLeftRotate(Node *parent){
+  Node *root = parent->rightChild->leftChild;
+  Node *rightChild = parent->rightChild;
+  root->leftChild = parent;
+  root->rightChild = rightChild;
+  root->leftChild->rightChild = NULL;
+  root->rightChild->leftChild = NULL;
+  
+  root->leftChild->rank = 0;
+  root->rightChild->rank = 0;
+  root->rank = 0;
+  
+  return root;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
