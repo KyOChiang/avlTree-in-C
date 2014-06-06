@@ -177,11 +177,11 @@ void test_leftRotate_to_balance_an_unbalanced_tree(){
 
 void test_rightRotate_within_6_elements_to_balance_an_unbalanced_tree(){
   Node Node1 = {.data=1, .rank=0,  .leftChild=NULL, .rightChild = NULL};
-  Node Node30 = {.data=30, .rank=1,  .leftChild=NULL, .rightChild = NULL};
-  Node Node5 = {.data=5, .rank=0,  .leftChild=&Node1, .rightChild = NULL};
-  Node Node100 = {.data=100, .rank=1,  .leftChild=NULL, .rightChild = NULL};
-  Node Node20 = {.data=20, .rank=0,  .leftChild=&Node5, .rightChild =&Node30};
-  Node Node50 = {.data=50, .rank=2,  .leftChild=&Node20, .rightChild =&Node100};
+  Node Node30 = {.data=30, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node5 = {.data=5, .rank=-1,  .leftChild=&Node1, .rightChild = NULL};
+  Node Node100 = {.data=100, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node20 = {.data=20, .rank=-1,  .leftChild=&Node5, .rightChild =&Node30};
+  Node Node50 = {.data=50, .rank=-2,  .leftChild=&Node20, .rightChild =&Node100};
 
   Node *root;
   root = rightRotate(&Node50);
