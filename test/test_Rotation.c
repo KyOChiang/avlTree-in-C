@@ -164,6 +164,47 @@ void test_leftRotate_to_balance_an_unbalanced_tree(){
   TEST_ASSERT_NULL(Node200.rightChild);
 }
 
+/*
+ *        (50)                          (20)
+ *        /  \                          /   \
+ *     (20)  (100)           =>       (5)   (50)
+ *     /  \                           /     /  \
+ *   (5)  (30)                      (1)  (30)   (100)
+ *   /
+ * (1)
+ *
+ */
+
+void test_rightRotate_within_6_elements_to_balance_an_unbalanced_tree(){
+  Node Node1 = {.data=1, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node30 = {.data=30, .rank=1,  .leftChild=NULL, .rightChild = NULL};
+  Node Node5 = {.data=5, .rank=0,  .leftChild=&Node1, .rightChild = NULL};
+  Node Node100 = {.data=100, .rank=1,  .leftChild=NULL, .rightChild = NULL};
+  Node Node20 = {.data=20, .rank=0,  .leftChild=&Node5, .rightChild =&Node30};
+  Node Node50 = {.data=50, .rank=2,  .leftChild=&Node20, .rightChild =&Node100};
+
+  Node *root;
+  root = rightRotate(&Node50);
+  TEST_ASSERT_EQUAL_PTR(&Node20, root);
+  TEST_ASSERT_EQUAL_PTR(&Node5, root->leftChild);
+  TEST_ASSERT_EQUAL_PTR(&Node1, root->leftChild->leftChild);
+  TEST_ASSERT_EQUAL_PTR(&Node50, root->rightChild);
+  TEST_ASSERT_EQUAL_PTR(&Node100, root->rightChild->rightChild);
+  TEST_ASSERT_EQUAL_PTR(&Node30, root->rightChild->leftChild);
+  TEST_ASSERT_NULL(root->leftChild->rightChild);
+  TEST_ASSERT_NULL(root->leftChild->leftChild->leftChild);
+  TEST_ASSERT_NULL(root->leftChild->leftChild->rightChild);
+  TEST_ASSERT_NULL(root->rightChild->leftChild->leftChild);
+  TEST_ASSERT_NULL(root->rightChild->leftChild->rightChild);
+  TEST_ASSERT_NULL(root->rightChild->rightChild->rightChild);
+  TEST_ASSERT_NULL(root->rightChild->rightChild->leftChild);
+}
+
+
+
+
+
+
 
 
 

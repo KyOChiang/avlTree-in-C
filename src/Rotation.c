@@ -20,10 +20,15 @@ Node* leftRotate(Node *parent){
 }
 
 Node* rightRotate(Node *parent){
+
   Node *root = parent->leftChild;
+  if(parent->leftChild->rightChild != NULL){
+    parent->leftChild = parent->leftChild->rightChild;
+  }
+  else{
+    parent->leftChild = NULL;
+  }  
   root->rightChild = parent;
-  parent->leftChild = NULL;
-  
   root->leftChild->rank = 0;
   root->rightChild->rank = 0;
   root->rank = 0;
