@@ -108,9 +108,26 @@ void test_doubleLeftRotate_given_3_elements_should_rotate_to_balance_tree(){
   TEST_ASSERT_EQUAL(0, Node3.rank);
 }
 
-
-
-
+/*
+ *      (1)       
+ *        \          
+ *        (2)     
+ *        /       
+ *      (3)        
+ * 
+ */
+ 
+void test_getHeight_given_3_elements_should_return_3(){
+  
+  Node Node3 = {.data=3, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node2 = {.data=2, .rank=-1,  .leftChild=&Node3, .rightChild = NULL};
+  Node Node1 = {.data=1, .rank=2, .leftChild=NULL, .rightChild = &Node2};
+  int height;
+  
+  height = getHeight(&Node1);
+  
+  TEST_ASSERT_EQUAL(3,height);
+}
 
 
 

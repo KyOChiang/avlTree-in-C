@@ -54,6 +54,26 @@ Node* doubleLeftRotate(Node *parent){
   return root;
 }
 
+int getHeight(Node *parent){
+  int l = 0, r = 0, h;
+  if((parent->leftChild == NULL)&&(parent->rightChild == NULL)){
+    return 1;
+  }
+  else if(parent->leftChild == NULL){
+    r = getHeight(parent->rightChild);
+  }
+  else if(parent->rightChild == NULL){
+    l = getHeight(parent->leftChild);
+  }
+  else{
+    l = getHeight(parent->leftChild);
+    r = getHeight(parent->rightChild);
+  }
+  
+  h = (l>=r) ? l+1:r+1;
+  return h;
+}
+
 
 
 
