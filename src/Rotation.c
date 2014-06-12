@@ -12,10 +12,6 @@ Node* leftRotate(Node *parent){
     parent->rightChild = NULL;
   }
   root->leftChild = parent;
-  root->leftChild->rank = 0;
-  root->rightChild->rank = 0;
-  root->rank = 0;
-  
   return root;
 }
 
@@ -29,22 +25,15 @@ Node* rightRotate(Node *parent){
     parent->leftChild = NULL;
   }  
   root->rightChild = parent;
-  root->leftChild->rank = 0;
-  root->rightChild->rank = 0;
-  root->rank = 0;
-  
   return root;
 }
 
 Node* doubleRightRotate(Node *parent){
-  Node *leftChild = parent->leftChild->rightChild;
-  Node *root = parent->leftChild;
-  root->rightChild = parent;
-  root->leftChild = leftChild;
-  
-  root->leftChild->rank = 0;
-  root->rightChild->rank = 0;
-  root->rank = 0;
+  Node *root;
+  Node *leftChild = parent->leftChild;
+  leftChild = leftRotate(leftChild);
+  parent->leftChild = leftChild;
+  root = rightRotate(parent);
   
   return root;
 }
