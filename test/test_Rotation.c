@@ -80,6 +80,131 @@ void test_doubleRightRotate_given_3_elements_should_rotate_to_balance_tree(){
 }
 
 /*
+ *        (50)             (50)                 (30)
+ *        /  \             /  \                 /  \
+ *      (10) (100)    => (30) (100)    =>     (10) (50)
+ *      /  \             /  \                 /    /  \
+ *    (5)  (30)        (10) (40)            (5)  (40) (100)
+ *            \        /
+ *            (40)   (5)
+ *                 left-Rotate    right-Rotate
+ */
+ 
+void test_doubleRightRotate_given_6_elements_should_rotate_to_balance_tree(){
+  Node Node40 = {.data=40, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node30 = {.data=30, .rank=1,  .leftChild=NULL, .rightChild = &Node40};
+  Node Node5 = {.data=5, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node100 = {.data=100, .rank=0, .leftChild=NULL, .rightChild = NULL};
+  Node Node10 = {.data=10, .rank=1, .leftChild=&Node5, .rightChild = &Node30};
+  Node Node50 = {.data=50, .rank=-2,  .leftChild=&Node10, .rightChild = &Node100};
+  Node *root;
+  
+  root = doubleRightRotate(&Node50);
+  TEST_ASSERT_EQUAL_PTR(&Node30, root);
+  TEST_ASSERT_EQUAL_PTR(&Node10, root->leftChild);
+  TEST_ASSERT_EQUAL_PTR(&Node5, root->leftChild->leftChild);
+  TEST_ASSERT_EQUAL_PTR(&Node50, root->rightChild);
+  TEST_ASSERT_EQUAL_PTR(&Node100, root->rightChild->rightChild);
+  TEST_ASSERT_EQUAL_PTR(&Node40, root->rightChild->leftChild);
+  
+  TEST_ASSERT_NULL(Node10.rightChild);
+  TEST_ASSERT_NULL(Node5.rightChild);
+  TEST_ASSERT_NULL(Node40.rightChild);
+  TEST_ASSERT_NULL(Node100.rightChild);
+  TEST_ASSERT_NULL(Node5.leftChild);
+  TEST_ASSERT_NULL(Node40.leftChild);
+  TEST_ASSERT_NULL(Node100.leftChild);
+}
+
+/*
+ *        (50)             (50)                 (30)
+ *        /  \             /  \                 /  \
+ *      (10) (100)    => (30) (100)    =>     (10) (50)
+ *      /  \             /                    /  \    \
+ *    (5)  (30)        (10)                 (5)  (20) (100)
+ *         /           /  \
+ *      (20)         (5)  (20)
+ *                 left-Rotate    right-Rotate
+ */
+ 
+void test_doubleRightRotate_given_6_elements_should_rotate_left_then_right_to_balance_tree(){
+  Node Node20 = {.data=20, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node30 = {.data=30, .rank=-1,  .leftChild=&Node20, .rightChild = NULL};
+  Node Node5 = {.data=5, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node100 = {.data=100, .rank=0, .leftChild=NULL, .rightChild = NULL};
+  Node Node10 = {.data=10, .rank=1, .leftChild=&Node5, .rightChild = &Node30};
+  Node Node50 = {.data=50, .rank=-2,  .leftChild=&Node10, .rightChild = &Node100};
+  Node *root;
+  
+  root = doubleRightRotate(&Node50);
+  TEST_ASSERT_EQUAL_PTR(&Node30, root);
+  TEST_ASSERT_EQUAL_PTR(&Node10, root->leftChild);
+  TEST_ASSERT_EQUAL_PTR(&Node5, root->leftChild->leftChild);
+  TEST_ASSERT_EQUAL_PTR(&Node50, root->rightChild);
+  TEST_ASSERT_EQUAL_PTR(&Node100, root->rightChild->rightChild);
+  TEST_ASSERT_EQUAL_PTR(&Node20, root->leftChild->rightChild);
+  
+  TEST_ASSERT_NULL(Node50.leftChild);
+  TEST_ASSERT_NULL(Node5.rightChild);
+  TEST_ASSERT_NULL(Node20.rightChild);
+  TEST_ASSERT_NULL(Node100.rightChild);
+  TEST_ASSERT_NULL(Node5.leftChild);
+  TEST_ASSERT_NULL(Node20.leftChild);
+  TEST_ASSERT_NULL(Node100.leftChild);
+}
+
+/*
+ *        (50)                    ( 50 )                 (  30  )
+ *        /  \                    /    \                 /      \
+ *      (10) (100)        =>    ( 30 ) (100)    =>     (10)     (50)
+ *      /  \     \              /    \     \           /  \     /  \
+ *    (5)  (30)  (150)        (10)    (40) (150)     (5)  (20)(40) (100)
+ *    /    /  \               /  \     /             /        /        \
+ *  (1) (20)  (40)          (5)  (20)(36)          (1)      (36)       (150)
+ *            /             /
+ *          (36)          (1)
+ *                 left-Rotate    right-Rotate
+ */
+ 
+void test_doubleRightRotate_given_10_elements_should_rotate_left_then_right_to_balance_tree(){
+  Node Node1 = {.data=1, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node36 = {.data=36, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node20 = {.data=20, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node40 = {.data=40, .rank=-1,  .leftChild=&Node36, .rightChild = NULL};
+  Node Node30 = {.data=30, .rank=1,  .leftChild=&Node20, .rightChild = &Node40};
+  Node Node5 = {.data=5, .rank=-1,  .leftChild=&Node1, .rightChild = NULL};
+  Node Node150 = {.data=150, .rank=0,  .leftChild=NULL, .rightChild = NULL};
+  Node Node100 = {.data=100, .rank=1, .leftChild=NULL, .rightChild = &Node150};
+  Node Node10 = {.data=10, .rank=1, .leftChild=&Node5, .rightChild = &Node30};
+  Node Node50 = {.data=50, .rank=-2,  .leftChild=&Node10, .rightChild = &Node100};
+  Node *root;
+  
+  root = doubleRightRotate(&Node50);
+  TEST_ASSERT_EQUAL_PTR(&Node30, root);
+  TEST_ASSERT_EQUAL_PTR(&Node10, root->leftChild);
+  TEST_ASSERT_EQUAL_PTR(&Node20, root->leftChild->rightChild);
+  TEST_ASSERT_EQUAL_PTR(&Node5, root->leftChild->leftChild);
+  TEST_ASSERT_EQUAL_PTR(&Node1, root->leftChild->leftChild->leftChild);
+  TEST_ASSERT_EQUAL_PTR(&Node50, root->rightChild);
+  TEST_ASSERT_EQUAL_PTR(&Node100, root->rightChild->rightChild);
+  TEST_ASSERT_EQUAL_PTR(&Node150, root->rightChild->rightChild->rightChild);
+  TEST_ASSERT_EQUAL_PTR(&Node36, root->rightChild->leftChild->leftChild);
+  TEST_ASSERT_EQUAL_PTR(&Node40, root->rightChild->leftChild);
+  
+  TEST_ASSERT_NULL(Node5.rightChild);
+  TEST_ASSERT_NULL(Node100.leftChild);
+  TEST_ASSERT_NULL(Node40.rightChild);
+  TEST_ASSERT_NULL(Node1.rightChild);
+  TEST_ASSERT_NULL(Node36.rightChild);
+  TEST_ASSERT_NULL(Node150.rightChild);
+  TEST_ASSERT_NULL(Node20.rightChild);
+  TEST_ASSERT_NULL(Node1.leftChild);
+  TEST_ASSERT_NULL(Node36.leftChild);
+  TEST_ASSERT_NULL(Node150.leftChild);
+  TEST_ASSERT_NULL(Node20.leftChild);
+}
+
+/*
  *      (1)           (1)               (2)
  *        \             \               / \
  *        (3)     =>    (2)      =>   (1) (3)
