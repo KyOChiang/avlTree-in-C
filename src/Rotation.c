@@ -12,6 +12,26 @@ Node* leftRotate(Node *parent){
     parent->rightChild = NULL;
   }
   root->leftChild = parent;
+  if((parent->balance == 2)&&(root->balance == 1)){
+    parent->balance = 0;
+    root->balance = 0;
+  }
+  else if((parent->balance == 1)&&(root->balance == 1)){
+    parent->balance = -1;
+    root->balance = -1;
+  }
+  else if((parent->balance == 1)&&(root->balance == -1)){
+    parent->balance = 0;
+    root->balance = -2;
+  }
+  else if((parent->balance == 2)&&(root->balance == 2)){
+    parent->balance = -1;
+    root->balance = 0;
+  }
+  else if((parent->balance == 1)&&(root->balance == 0)){
+    parent->balance = 0;
+    root->balance = -1;
+  }
   return root;
 }
 
@@ -25,6 +45,26 @@ Node* rightRotate(Node *parent){
     parent->leftChild = NULL;
   }  
   root->rightChild = parent;
+  if((parent->balance == -2)&&(root->balance == -1)){
+    parent->balance = 0;
+    root->balance = 0;
+  }
+  else if((parent->balance == -1)&&(root->balance == -1)){
+    parent->balance = 1;
+    root->balance = 1;
+  }
+  else if((parent->balance == -1)&&(root->balance == 1)){
+    parent->balance = 0;
+    root->balance = 2;
+  }
+  else if((parent->balance == -2)&&(root->balance == -2)){
+    parent->balance = 1;
+    root->balance = 0;
+  }
+  else if((parent->balance == -1)&&(root->balance == 0)){
+    parent->balance = 0;
+    root->balance = 1;
+  }
   return root;
 }
 
@@ -67,11 +107,6 @@ int getHeight(Node *parent){
   h = (l>=r) ? l+1:r+1;
   return h;
 }
-
-
-
-
-
 
 
 
