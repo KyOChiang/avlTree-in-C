@@ -228,9 +228,6 @@ void test_doubleLeftRotate_given_3_elements_should_rotate_to_balance_tree(){
   TEST_ASSERT_NULL(Node1.rightChild);
   TEST_ASSERT_NULL(Node3.leftChild);
   TEST_ASSERT_NULL(Node3.rightChild);
-  TEST_ASSERT_EQUAL(0, Node2.rank);
-  TEST_ASSERT_EQUAL(0, Node1.rank);
-  TEST_ASSERT_EQUAL(0, Node3.rank);
 }
 
 /*
