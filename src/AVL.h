@@ -10,7 +10,7 @@ Node *rightChild;
 int data;
 }Node;
 
-Node avlAdd(Node *root, Node *elem);
-Node avlRemove(Node *root, Node *elem);
+Node *avlAdd(Node *root, Node *elem);
+Node *avlRemove(Node *root, Node *elem);
 
 #endif
