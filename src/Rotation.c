@@ -32,6 +32,10 @@ Node* leftRotate(Node *parent){
     parent->balance = 0;
     root->balance = -1;
   }
+  else if((parent->balance == 2)&&(root->balance == 0)){
+    parent->balance = 1;
+    root->balance = -1;
+  }
   return root;
 }
 
@@ -63,6 +67,10 @@ Node* rightRotate(Node *parent){
   }
   else if((parent->balance == -1)&&(root->balance == 0)){
     parent->balance = 0;
+    root->balance = 1;
+  }
+  else if((parent->balance == -2)&&(root->balance == 0)){
+    parent->balance = -1;
     root->balance = 1;
   }
   return root;

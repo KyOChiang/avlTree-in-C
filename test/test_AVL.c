@@ -3,7 +3,7 @@
 #include "Rotation.h"
 #include "CustomAssert.h"
 
-Node Node1, Node50, Node100, Node75, Node150, Node200, Node120, Node110, \
+Node Node1, Node25, Node40, Node50, Node100, Node75, Node150, Node200, Node220, Node120, Node110, \
 Node130, Node250, Node140, Node105;
 
 void initNode(Node *node, int nodeData){
@@ -15,11 +15,14 @@ void initNode(Node *node, int nodeData){
 
 void setUp(){
 initNode(&Node1,1);
+initNode(&Node25,25);
+initNode(&Node40,40);
 initNode(&Node50,50);
 initNode(&Node100,100);
 initNode(&Node75,75);
 initNode(&Node150,150);
 initNode(&Node200,200);
+initNode(&Node220,220);
 initNode(&Node120,120);
 initNode(&Node110,110);
 initNode(&Node130,130);
@@ -351,11 +354,7 @@ void test_avlGetReplacer_should_return_the_replace_node_from_50_1(){
   Node *root = NULL; Node *replacedNode;
   root = avlAdd(root, &Node50);
   root = avlAdd(root, &Node1);
-  TEST_ASSERT_EQUAL_PTR(&Node1,Node50.leftChild);
-  TEST_ASSERT_EQUAL_INT(-1,Node50.balance);
-  
-  // printf("%p\n", &Node1);
-  // printf("%p\n---------\n", &Node50);
+
   replacedNode = avlGetReplacer(&root);
   
   TEST_ASSERT_EQUAL_PTR(&Node50,replacedNode);
@@ -365,6 +364,631 @@ void test_avlGetReplacer_should_return_the_replace_node_from_50_1(){
   TEST_ASSERT_NULL(Node1.leftChild);
 }
 
+/**
+ *      50             50
+ *     /  \     =>    /
+ *   25   150       25
+ *
+ * where 150 is being removed
+ */
+
+void test_avlGetReplacer_should_return_the_replace_node150_from_25_50_150(){
+  Node *root = NULL; Node *replacedNode;
+  root = avlAdd(root, &Node25);
+  root = avlAdd(root, &Node50);
+  root = avlAdd(root, &Node150);
+
+  replacedNode = avlGetReplacer(&root);
+  
+  TEST_ASSERT_EQUAL_AVL_Node(&Node25,NULL,-1,&Node50);
+  TEST_ASSERT_EQUAL_PTR(&Node150,replacedNode);
+}
+
+ /**
+ *      50             50
+ *     /  \     =>    /  \
+ *   25   200       25   150
+ *        /
+ *      150
+ *
+ * where 200 is being removed
+ */
+ 
+void test_avlGetReplacer_should_return_the_replace_node200_from_25_50_200_150(){
+  Node *root = NULL; Node *replacedNode;
+  root = avlAdd(root, &Node25);
+  root = avlAdd(root, &Node50);
+  root = avlAdd(root, &Node200);
+  root = avlAdd(root, &Node150);
+
+  replacedNode = avlGetReplacer(&root);
+  
+  TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node150,0,&Node50);
+  TEST_ASSERT_EQUAL_PTR(&Node200,replacedNode);
+}
+
+/**
+ *      50             50
+ *     /  \     =>    /  \
+ *   25   200       25   200
+ *        / \            /
+ *      150 220        150
+ * 
+ * where 220 is being removed
+ */
+ 
+void test_avlGetReplacer_should_return_the_replace_node220_from_25_50_200_150_220(){
+  Node *root = NULL; Node *replacedNode;
+  root = avlAdd(root, &Node25);
+  root = avlAdd(root, &Node50);
+  root = avlAdd(root, &Node200);
+  root = avlAdd(root, &Node150);
+  root = avlAdd(root, &Node220);
+
+  replacedNode = avlGetReplacer(&root);
+  
+  TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node200,1,&Node50);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node150,NULL,-1,&Node200);
+  TEST_ASSERT_EQUAL_PTR(&Node220,replacedNode);
+}
+
+/**
+ *      50
+ *        \     =>    50
+ *        200
+ *
+ * where 200 is being removed
+ */
+
+ void test_avlGetReplacer_should_return_the_replace_node200_from_50_200(){
+  Node *root = NULL; Node *replacedNode;
+  root = avlAdd(root, &Node50);
+  root = avlAdd(root, &Node200);
+
+  replacedNode = avlGetReplacer(&root);
+  
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node50);
+}
+
+/**
+ *        50                  50
+ *      /   \               /   \
+ *     25   200           25    200
+ *    /    /  \    =>    /     /  \
+ *   1   150  250       1    150  220
+ *            /
+ *          220
+ * 
+ * where 250 is being removed 1 1 -1 -> 0 0 0
+ */
+ 
+void test_avlGetReplacer_should_return_the_replace_node250_from_1_25_50_200_150_250_220(){
+  Node *root = NULL; Node *replacedNode;
+  root = avlAdd(root, &Node25);
+  root = avlAdd(root, &Node50);
+  root = avlAdd(root, &Node200);
+  root = avlAdd(root, &Node150);
+  root = avlAdd(root, &Node250);
+  root = avlAdd(root, &Node220);
+  root = avlAdd(root, &Node1);
+  
+  /*printf("1 : %p\n", &Node1);
+  printf("25 : %p\n", &Node25);
+  printf("50 : %p\n", &Node50);
+  printf("150 : %p\n", &Node150);
+  printf("200 : %p\n", &Node200);
+  printf("220 : %p\n", &Node220);
+  printf("250 : %p\n", &Node250);*/
+  
+  root = rightRotate(root);
+  
+  /*TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node200,1,&Node50);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node1,NULL,-1,&Node25);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node150);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node220);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node150,&Node250,1,&Node200);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node220,NULL,-1,&Node250);*/
+
+  replacedNode = avlGetReplacer(&root);
+  
+  TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node200,0,&Node50);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node150,&Node220,0,&Node200);
+  TEST_ASSERT_EQUAL_PTR(&Node250,replacedNode);
+}
+
+/**
+ *        50                 50            25
+ *      /   \               /            /   \
+ *     25   150    =>     25       =>   1    50
+ *    /                  /
+ *   1                  1
+ *
+ * where 150 is being removed
+ */
+
+void test_avlGetReplacer_should_return_the_replace_node150_from_1_25_50_150(){
+  Node *root = NULL; Node *replacedNode;
+  root = avlAdd(root, &Node25);
+  root = avlAdd(root, &Node50);
+  root = avlAdd(root, &Node150);
+  root = avlAdd(root, &Node1);
+  
+  /*printf("1 : %p\n", &Node1);
+  printf("25 : %p\n", &Node25);
+  printf("50 : %p\n", &Node50);
+  printf("150 : %p\n", &Node150);*/
+ 
+  replacedNode = avlGetReplacer(&root);
+  
+  TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node50,0,&Node25);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node50);
+  TEST_ASSERT_EQUAL_PTR(&Node150,replacedNode);
+}
+ 
+/**
+ *        100                  100                50
+ *      /    \               /    \             /    \
+ *     25    150           25     150         25     100
+ *    /  \     \    =>    /  \          =>   /  \    /  \
+ *   1   50    200       1   50             1   40  75  150
+ *      /  \                /  \
+ *     40  75              40  75
+ *
+ * where 200 is being removed
+ */
+ 
+void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_40_75_200_150_100(){
+  Node *root = NULL; Node *replacedNode;
+  root = avlAdd(root, &Node25);
+  root = avlAdd(root, &Node100);
+  root = avlAdd(root, &Node150);
+  root = avlAdd(root, &Node200);
+  root = avlAdd(root, &Node1);
+  root = avlAdd(root, &Node50);
+  root = avlAdd(root, &Node40);
+  root = avlAdd(root, &Node75);
+  
+  /*TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node150,-1,&Node100);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node50,1,&Node25);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node200,1,&Node150);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node75);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node40);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node200);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node40,&Node75,0,&Node50);*/
+
+  replacedNode = avlGetReplacer(&root);
+  
+  TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node100,0,&Node50);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node75,&Node150,0,&Node100);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node40,0,&Node25);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node40);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node75);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node150);
+  TEST_ASSERT_EQUAL_PTR(&Node200,replacedNode);
+}
+
+/**
+ *        100                  100                50
+ *      /    \               /    \             /    \
+ *     25    150           25     150         25     100
+ *    /  \     \    =>    /  \          =>   /       /  \
+ *   1   50    200       1   50             1      75  150
+ *         \                   \
+ *         75                  75
+ *
+ * where 200 is being removed
+ */
+
+void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_75_200_150_100(){
+  Node *root = NULL; Node *replacedNode;
+  root = avlAdd(root, &Node25);
+  root = avlAdd(root, &Node100);
+  root = avlAdd(root, &Node150);
+  root = avlAdd(root, &Node50);
+  root = avlAdd(root, &Node1);
+  root = avlAdd(root, &Node75);
+  root = avlAdd(root, &Node200);
+  
+  /*printf("1 : %p\n", &Node1);
+  printf("25 : %p\n", &Node25);
+  printf("50 : %p\n", &Node50);
+  printf("75 : %p\n", &Node75);
+  printf("100 : %p\n", &Node100);
+  printf("150 : %p\n", &Node150);
+  printf("200 : %p\n", &Node200);*/
+  
+  root = leftRotate(root);
+  root->leftChild = rightRotate(root->leftChild);
+  
+  /*TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node150,-1,&Node100);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node50,1,&Node25);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node200,1,&Node150);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node75);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node200);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node75,1,&Node50);*/
+  
+
+  replacedNode = avlGetReplacer(&root);
+  
+  TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node100,0,&Node50);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node75,&Node150,0,&Node100);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node1,NULL,-1,&Node25);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node75);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node150);
+  TEST_ASSERT_EQUAL_PTR(&Node200,replacedNode);
+}
+ 
+/**
+ *        100                  100                50
+ *      /    \               /    \             /    \
+ *     25    150           25     150         25     100
+ *    /  \     \    =>    /  \          =>   /  \       \
+ *   1   50    200       1   50             1   40      150
+ *      /                   /
+ *     40                  40
+ *
+ * where 200 is being removed
+ */
+ 
+void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_40_200_150_100(){
+  Node *root = NULL; Node *replacedNode;
+  root = &Node100;
+  root->leftChild = &Node25;
+  root->rightChild = &Node150;
+  Node150.rightChild = &Node200;
+  Node25.leftChild = &Node1;
+  Node50.leftChild = &Node40;
+  Node25.rightChild = &Node50;
+  
+  Node100.balance = -1;
+  Node25.balance = 1;
+  Node150.balance =1 ;
+  Node50.balance = -1;
+  
+  replacedNode = avlGetReplacer(&root);
+  
+  TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node100,0,&Node50);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node150,1,&Node100);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node40,0,&Node25);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node40);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node150);
+  TEST_ASSERT_EQUAL_PTR(&Node200,replacedNode);
+}
+
+/**
+ *        100                  100                40
+ *      /    \               /    \             /    \
+ *     40    150           40     150         25     100
+ *    /  \     \    =>    /  \          =>   /       /  \
+ *   25  75   200        25  75             1      75   150
+ *  /    /              /    /                    /
+ * 1    50             1    50                  50
+ *
+ * where 200 is being removed
+ */
+
+void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_40_75_100_200_150(){
+  Node *root = NULL; Node *replacedNode;
+  root = &Node100;
+  root->leftChild = &Node40;
+  root->rightChild = &Node150;
+  Node150.rightChild = &Node200;
+  Node40.leftChild = &Node25;
+  Node40.rightChild = &Node75;
+  Node25.leftChild = &Node1;
+  Node75.leftChild = &Node50;
+  
+  Node100.balance = -1;
+  Node25.balance = -1;
+  Node150.balance = 1 ;
+  Node75.balance = -1;
+  
+  replacedNode = avlGetReplacer(&root);
+  
+  TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node100,1,&Node40);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node75,&Node150,-1,&Node100);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node1,NULL,-1,&Node25);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node50,NULL,-1,&Node75);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node50);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node150);
+  TEST_ASSERT_EQUAL_PTR(&Node200,replacedNode);
+}
+ 
+////////////////////////////////////////////////////////////
+// Test avlRemove() on deletion of node on the left subtree
+////////////////////////////////////////////////////////////
+/**
+ *      50  => NULL
+ *
+ * where 50 is being removed 
+ */
+
+/**
+ *        50                 50
+ *      /   \               /  \
+ *     25   150    =>     25   150
+ *             \                  \
+ *             200                200
+ *
+ * Attempt to remove 1, which cannot be found in the tree.
+ */
+
+/**
+ *      50             50
+ *     /  \     =>       \
+ *   25   150            150
+ *
+ * where 150 is being removed
+ */
+
+/**
+ *        50                 150
+ *      /   \               /  \
+ *     25   150    =>     50   200
+ *             \
+ *             200
+ *
+ * where 25 is being removed
+ */
+
+/**
+ *        50                 50
+ *      /   \               /  \
+ *    25    150    =>     1    150
+ *    /       \                  \
+ *   1       200                 200
+ *
+ * where 25 is being removed
+ */
+
+/**
+ *        100                  100                    150
+ *      /    \               /    \                 /    \
+ *    25     200           25     200             100     200
+ *    /     /  \    =>            /  \     =>    /  \     /  \
+ *   1    150  220              150  220        25  120 175  220
+ *       /  \                  /  \
+ *     120  175              120  175
+ *
+ * where 200 is being removed
+ */
+
+/**
+ *        100                  100                    150
+ *      /    \               /    \                 /    \
+ *    25     200           25     200             100     200
+ *    /     /  \    =>            /  \     =>    /  \       \
+ *   1    150  220              150  220        25  120     220
+ *       /                     /
+ *     120                   120
+ *
+ * where 200 is being removed
+ */
+
+/**
+ *        100                  100                    150
+ *      /    \               /    \                 /    \
+ *    25     200           25     200             100     200
+ *    /     /  \    =>            /  \     =>    /        /  \
+ *   1    150  220              150  220        25      175  220
+ *          \                     \
+ *          175                   175
+ *
+ * where 200 is being removed
+ */
+
+/**
+ *        100                  100                    200
+ *      /    \               /    \                 /    \
+ *    25     200           25     200             100     220
+ *    /     /  \    =>            /  \     =>    /  \       \
+ *   1    150  220              150  220        25  150     250
+ *          \    \                \    \              \
+ *          175  250              175  250            175
+ *
+ * where 1 is being removed
+ */
+
+/**
+ *      50             50
+ *     /  \     =>    /  \
+ *   25   200       40   200
+ *    \
+ *    40
+ *
+ * where 25 is being removed
+ */
+
+/**
+ *       50             50
+ *      /  \     =>    /  \
+ *    25   200        1   200
+ *   / \               \
+ *  1  40              40
+ *
+ * where 25 is being removed
+ */
+
+ /**
+ *      150              90
+ *     /  \             /  \
+ *   25   200    =>   25   200
+ *  / \     \        / \     \
+ * 1   50   250     1   40   250
+ *       \
+ *       90
+ *
+ * where 150 is being removed
+ */
+
+/**
+ *      150              90
+ *     /  \             /  \
+ *   25   200    =>   25   200
+ *  / \     \        / \     \
+ * 1   50   250     1   50   250
+ *    /  \              /
+ *   40  90            40
+ *
+ * where 150 is being removed
+ */
+
+/////////////////////////////////////////////////////////////
+// Test avlRemove() on deletion of node on the right subtree
+/////////////////////////////////////////////////////////////
+/**
+ *        50                 50
+ *      /   \               /  \
+ *     25   150    =>     25   150
+ *    /                  /
+ *   1                  1
+ *
+ * Attempt to remove 200, which cannot be found in the tree.
+ */
+
+/**
+ *      50             50
+ *     /  \     =>    /
+ *   25   150       25
+ *
+ * where 150 is being removed
+ */
+
+/**
+ *        50                 50            25
+ *      /   \               /            /   \
+ *     25   150    =>     25       =>   1    50
+ *    /                  /
+ *   1                  1
+ *
+ * where 150 is being removed
+ */
+
+/**
+ *        50                 50
+ *      /   \               /  \
+ *     25   150    =>     25   200
+ *    /       \          /
+ *   1       200        1
+ *
+ * where 150 is being removed
+ */
+
+/**
+ *        100                  100                50
+ *      /    \               /    \             /    \
+ *     25    150           25     150         25     100
+ *    /  \     \    =>    /  \          =>   /  \    /  \
+ *   1   50    200       1   50             1   40  75  150
+ *      /  \                /  \
+ *     40  75              40  75
+ *
+ * where 200 is being removed
+ */
+
+/**
+ *        100                  100                50
+ *      /    \               /    \             /    \
+ *     25    150           25     150         25     100
+ *    /  \     \    =>    /  \          =>   /       /  \
+ *   1   50    200       1   50             1      75  150
+ *         \                   \
+ *         75                  75
+ *
+ * where 200 is being removed
+ */
+
+/**
+ *        100                  100                50
+ *      /    \               /    \             /    \
+ *     25    150           25     150         25     100
+ *    /  \     \    =>    /  \          =>   /  \       \
+ *   1   50    200       1   50             1   40      150
+ *      /                   /
+ *     40                  40
+ *
+ * where 200 is being removed
+ */
+
+/**
+ *        100                  100                40
+ *      /    \               /    \             /    \
+ *     40    150           40     150         25     100
+ *    /  \     \    =>    /  \          =>   /       /  \
+ *   25  75   200        25  75             1      75   150
+ *  /    /              /    /                    /
+ * 1    50             1    50                  50
+ *
+ * where 200 is being removed
+ */
+
+/**
+ *      50             50
+ *     /  \     =>    /  \
+ *   25   200       25   150
+ *        /
+ *      150
+ *
+ * where 200 is being removed
+ */
+
+/**
+ *      50             50
+ *     /  \     =>    /  \
+ *   25   200       25   150
+ *        / \              \
+ *      150 220            220
+ *
+ * where 200 is being removed
+ */
+
+/**
+ *      50               50
+ *     /  \             /  \
+ *   25   200    =>   25   175
+ *  /     / \        /    /  \
+ * 1    150 250     1   150  250
+ *        \
+ *        175
+ *
+ * where 200 is being removed
+ */
+
+/**
+ *      50               50
+ *     /  \             /  \
+ *   25   200    =>   25   175
+ *  /     / \        /    /  \
+ * 1    150 250     1   150  250
+ *      / \             /
+ *    120 175         120
+ * 
+ * where 200 is being removed
+ */
+
+/**
+ *              175                                   175
+ *          /          \                         /          \
+ *        100          400                     100          350
+ *       /   \       /     \                  /   \       /     \
+ *     50    150   250     500       =>     50    150   250     500
+ *    / \    /   /    \     / \            / \    /   /    \     / \
+ *  25  65 120 200    300 450 550        25  65 120 200    300 450 550
+ *   \          \     / \      \          \          \     / \      \
+ *   40         220 270 350    600        40         220 270 330    600
+ *                      /
+ *                    330
+ *
+ * where 400 is being removed
+ */
 
 
 

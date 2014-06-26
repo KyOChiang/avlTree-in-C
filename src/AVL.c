@@ -15,7 +15,7 @@ Node *avlAdd(Node *root, Node *newNode){
       }
       else{
         tempBal = root->leftChild->balance;
-        root->leftChild = root->leftChild = avlAdd(root->leftChild,newNode); 
+        root->leftChild = avlAdd(root->leftChild,newNode); 
         if((root->leftChild->balance != 0)&&(root->leftChild->balance-tempBal != 0)){
           root->balance = root->balance - 1;
         }
@@ -28,7 +28,7 @@ Node *avlAdd(Node *root, Node *newNode){
       }
       else{
         tempBal = root->rightChild->balance;
-        root->rightChild = root->rightChild = avlAdd(root->rightChild,newNode); 
+        root->rightChild = avlAdd(root->rightChild,newNode); 
         if((root->rightChild->balance != 0)&&(root->rightChild->balance-tempBal != 0)){
           root->balance = root->balance + 1;
         }
@@ -68,18 +68,49 @@ Node *avlRemove(Node **ptrPtrNode, Node *nodeToRemove){
 
 Node *avlGetReplacer(Node **ptrToRoot){
   Node *rootNode = *ptrToRoot, *replaceNode = *ptrToRoot;
+  //rtBal - rootBalance, rCBal - rightChildBalance, lCBal - leftChildBalance
+  int rtBal, rCBal, lCBal; 
 
   if(rootNode->rightChild == NULL){
     *ptrToRoot = rootNode->leftChild;
-    // printf("Inside: %p\n", *ptrToRoot);
-    // printf("Inside: %p\n", rootNode);
     return rootNode;
   }
   
   replaceNode = avlGetReplacer(&replaceNode->rightChild);
-  if(rootNode->rightChild==NULL)
+  if(rootNode->rightChild==NULL){
     rootNode->balance = rootNode->balance - 1;
-    printf("%p\n",rootNode);
+  }
+  else{
+    rtBal = rootNode->balance;
+    lCBal = rootNode->leftChild->balance;
+    rCBal = rootNode->rightChild->balance;
+    if(rtBal == 1 && (lCBal == 0||lCBal == -1) && rCBal == 0){
+      rootNode->balance = 0;
+    }
+    if(rtBal == -1 && (lCBal == 1||lCBal == 0) && (rCBal == 0||rCBal == -1)){
+      rootNode->balance = rootNode->balance - 1;
+    }
+  }
+  
+  if(rootNode->balance == 2){
+    if(rootNode->rightChild->balance == 1||rootNode->leftChild->balance == -1){
+      rootNode = leftRotate(rootNode);
+    }
+    else if(rootNode->rightChild->balance == -1){
+      rootNode = doubleLeftRotate(rootNode);
+    }
+  }
+  if(rootNode->balance == -2){
+    if(rootNode->leftChild->balance == -1||rootNode->leftChild->balance == 0){
+      rootNode = rightRotate(rootNode);
+    }
+    if(rootNode->leftChild->balance == 1){
+      rootNode = doubleRightRotate(rootNode);
+    }
+  }
   return replaceNode;
 }
 
+// printf("Inside: %p\n", *ptrToRoot);
+// printf("Inside: %p\n", rootNode);
+//printf("%p\n",rootNode);

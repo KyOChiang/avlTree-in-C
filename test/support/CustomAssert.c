@@ -13,5 +13,5 @@ void assertAvlNode(const Node* expectedLeftChild,
   }
   UNITY_TEST_ASSERT_EQUAL_PTR(expectedLeftChild, actual->leftChild, lineNumber, "The leftChild not the same.");
   UNITY_TEST_ASSERT_EQUAL_PTR(expectedRightChild, actual->rightChild, lineNumber, "The rightChild not the same.");
-  UNITY_TEST_ASSERT_EQUAL_INT(balanceFactor, actual->balance, lineNumber, "The balanceFactor not the same.");
+  UNITY_TEST_ASSERT_EQUAL_INT(balanceFactor, actual->balance, lineNumber, "The balance factor not the same.");
 }
