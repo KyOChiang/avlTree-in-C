@@ -55,3 +55,31 @@ Node *avlAdd(Node *root, Node *newNode){
   }
   return root;
 }
+
+Node *avlRemove(Node **ptrPtrNode, Node *nodeToRemove){
+  Node *smallThanNode, *bigThanNode;
+  
+  if(nodeToRemove == NULL|| *ptrPtrNode == NULL)
+    return NULL;
+  else{
+    return nodeToRemove;
+  }
+}
+
+Node *avlGetReplacer(Node **ptrToRoot){
+  Node *rootNode = *ptrToRoot, *replaceNode = *ptrToRoot;
+
+  if(rootNode->rightChild == NULL){
+    *ptrToRoot = rootNode->leftChild;
+    // printf("Inside: %p\n", *ptrToRoot);
+    // printf("Inside: %p\n", rootNode);
+    return rootNode;
+  }
+  
+  replaceNode = avlGetReplacer(&replaceNode->rightChild);
+  if(rootNode->rightChild==NULL)
+    rootNode->balance = rootNode->balance - 1;
+    printf("%p\n",rootNode);
+  return replaceNode;
+}
+

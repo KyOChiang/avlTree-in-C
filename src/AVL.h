@@ -11,6 +11,15 @@ int data;
 }Node;
 
 Node *avlAdd(Node *root, Node *elem);
-Node *avlRemove(Node *root, Node *elem);
+Node *avlRemove(Node **ptrPtrNode, Node *nodeToRemove);
+Node *avlGetReplacer(Node **ptrToRoot);
+
+// **variable ptr-ptr that point to certain pointer which point to some variable/element
+// Use when want to change a pointer direction from one to another(If return statement not 
+// using to return the pointer which address reference has changed from last. 
+// When come out from function, pointer inside function itself not related to pointer that pass into that function,
+// so there are no any changes to pointer that pass into unless using return statement.
+// E.g funct change(Node* ptrNode, Node* newNode){} / invoke funct change(root,xxx), root itself not the ptrNode, but share same content
+// (pass-by-value).
 
 #endif
