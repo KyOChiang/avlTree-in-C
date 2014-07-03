@@ -10,6 +10,10 @@ Node *rightChild;
 int data;
 }Node;
 
+typedef enum { NO_ERROR,
+			   ERR_INVALID_EQUAL_DATA
+} ExceptionError;
+
 Node *avlAdd(Node *root, Node *elem);
 Node *avlRemove(Node **ptrPtrNode, Node *nodeToRemove);
 Node *avlGetReplacer(Node **ptrToRoot);

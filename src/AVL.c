@@ -1,9 +1,11 @@
 #include <stdio.h>
+#include "CException.h"
 #include "AVL.h"
 #include "Rotation.h"
 
 Node *avlAdd(Node *root, Node *newNode){
   int tempBal = 0;
+  
   if(root == NULL){
     root = newNode;
   }
@@ -34,6 +36,8 @@ Node *avlAdd(Node *root, Node *newNode){
         }
       }
     }
+    if(root->data == newNode->data)
+      Throw(ERR_INVALID_EQUAL_DATA);
   }
   
   

@@ -1,4 +1,5 @@
 #include "unity.h"
+#include "CException.h"
 #include "AVL.h"
 #include "Rotation.h"
 #include "CustomAssert.h"
@@ -72,6 +73,28 @@ void test_avlAdd_should_add_from_1_50_100(){
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node100,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node100);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
+}
+
+/*
+ *     (1)
+ *       \         (50) <- equal data should not add
+ *       (50) 
+ *
+ */
+
+void test_avlAdd_should_not_add_node50_to_1_50(){
+  CEXCEPTION_T ERR;
+  Node *root = NULL;
+  
+  root = avlAdd(root,&Node1);
+  root = avlAdd(root,&Node50);
+  
+  Try{
+		root = avlAdd(root,&Node50);
+	} Catch(ERR){
+		TEST_ASSERT_EQUAL(ERR_INVALID_EQUAL_DATA,ERR);
+	}
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node50,1,&Node1);
 }
 
 /*
