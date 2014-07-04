@@ -3,6 +3,19 @@
 #include "AVL.h"
 #include "Rotation.h"
 
+/*
+ * avlRemove - To add the node selected
+ * Input tempBal  -> Temp data store for leftChild/ rightChild balance
+ *
+ * How to         -> Get the node to be added and compare to parent node
+ *                -> Big > parent node, check on the rightChild else check on the leftChild
+ *                -> leftChild/ rightChild = NULL? No, keep comparing data else add it to be the child
+ *                -> If the data equal? Yes, should not add it and throw an error
+ *                -> Perform any necessary rotation and balancing balance factor
+ *
+ * Return NULL, if node not exist(empty tree/node is null)
+ * Otherwise return the node pointer (parent node)
+ */
 Node *avlAdd(Node *root, Node *newNode){
   int tempBal = 0;
   
@@ -161,6 +174,24 @@ Node *avlRemove(Node **p2pNode, Node *remove){
   return replacedNode;
 }
 
+/*
+ * avlGetReplacer - To find out the replaced node within given parent node.
+ * Input rootNode -> Temp data store for parent node
+ *       rtBal    -> Temp data store for parent node balance
+ *       rCBal    -> Temp data store for rightChild node balance
+ *       lCBal    -> Temp data store for leftChild node balance
+ *
+ * How to         -> Check the rightChild is NULL or not?
+ *                -> Check on the rightChild
+ *                -> rightChild = NULL? No, keep accessing the rightChild of currentNode until the last
+ *                                      Remove and and return it 
+ *                                      Yes, return the first parent node and link the root pointer
+ *                                      to the leftChild of parent node
+ *                ->Perform necessary balancing and rotation
+ *
+ * Return NULL, if parent node not exist
+ * Otherwise return the node pointer (replacedNode) which remove from tree.
+ */
 Node *avlGetReplacer(Node **ptrToRoot){
   Node *rootNode = *ptrToRoot, *replaceNode = *ptrToRoot;
   //rtBal - rootBalance, rCBal - rightChildBalance, lCBal - leftChildBalance
