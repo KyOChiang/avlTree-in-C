@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "CException.h"
 #include "AVL.h"
+#include "AVLInt.h"
+#include "AVLString.h"
 #include "Rotation.h"
 
 /*
@@ -16,40 +18,45 @@
  * Return NULL, if node not exist(empty tree/node is null)
  * Otherwise return the node pointer (parent node)
  */
-Node *avlAdd(Node *root, Node *newNode){
+Node *avlAdd(Node *root, Node *newNode, int (*compare)(void *,void *)){
   int tempBal = 0;
+  int compareResult;
   
+  if(newNode == NULL){
+    return root;
+  }
   if(root == NULL){
     root = newNode;
   }
   else{
-    if((newNode->data) < (root->data)){
+    compareResult = compare(root,newNode);
+    if(compareResult == 1){
       if(root->leftChild == NULL){
-        root->leftChild = avlAdd(root->leftChild,newNode);
+        root->leftChild = avlAdd(root->leftChild,newNode, compare);
         root->balance = root->balance - 1;
       }
       else{
         tempBal = root->leftChild->balance;
-        root->leftChild = avlAdd(root->leftChild,newNode); 
+        root->leftChild = avlAdd(root->leftChild,newNode, compare); 
         if((root->leftChild->balance != 0)&&(root->leftChild->balance-tempBal != 0)){
           root->balance = root->balance - 1;
         }
       }
     }
-    else if((newNode->data) > (root->data)){
+    else if(compareResult == -1){
       if(root->rightChild == NULL){
-        root->rightChild = avlAdd(root->rightChild,newNode);
+        root->rightChild = avlAdd(root->rightChild,newNode, compare);
         root->balance = root->balance + 1;
       }
       else{
         tempBal = root->rightChild->balance;
-        root->rightChild = avlAdd(root->rightChild,newNode); 
+        root->rightChild = avlAdd(root->rightChild,newNode, compare); 
         if((root->rightChild->balance != 0)&&(root->rightChild->balance-tempBal != 0)){
           root->balance = root->balance + 1;
         }
       }
     }
-    if(root->data == newNode->data)
+    if(compareResult == 0)
       Throw(ERR_INVALID_EQUAL_DATA);
   }
   
@@ -95,16 +102,17 @@ Node *avlAdd(Node *root, Node *newNode){
  * Return NULL, if node not exist
  * Otherwise return the node pointer (replacedNode) which remove from tree.
  */
-Node *avlRemove(Node **p2pNode, Node *remove){
+Node *avlRemove(Node **p2pNode, Node *remove, int (*compare)(void *,void *)){
   Node *rootNode = *p2pNode, *replacedNode = *p2pNode, *lChild = NULL, *rChild = NULL;
   int lBalance;
+  int compareResult;
   if(remove == NULL|| *p2pNode == NULL)
     return NULL;
-  
-  if(remove->data > rootNode->data){
+  compareResult = compare((*p2pNode),remove);
+  if(compareResult == -1){
     if(rootNode->rightChild != NULL)
       lBalance = rootNode->rightChild->balance;
-    replacedNode = avlRemove(&rootNode->rightChild,remove);
+    replacedNode = avlRemove(&rootNode->rightChild,remove,compare);
     if(rootNode->leftChild == NULL && rootNode->rightChild != NULL)
       rootNode->balance = rootNode->balance + 1;
     if(rootNode->leftChild != NULL && rootNode->rightChild == NULL)
@@ -117,10 +125,10 @@ Node *avlRemove(Node **p2pNode, Node *remove){
     }
   }
   
-  else if(remove->data < rootNode->data){
+  else if(compareResult == 1){
     if(rootNode->leftChild != NULL)
       lBalance = rootNode->leftChild->balance;
-    replacedNode = avlRemove(&rootNode->leftChild,remove);
+    replacedNode = avlRemove(&rootNode->leftChild,remove,compare);
     if(rootNode->leftChild == NULL && rootNode->rightChild != NULL)
       rootNode->balance = rootNode->balance + 1;
     if(rootNode->leftChild == NULL && rootNode->rightChild == NULL)
@@ -133,7 +141,7 @@ Node *avlRemove(Node **p2pNode, Node *remove){
     }
   }
 
- if(rootNode->data == remove->data){
+  if(compareResult == 0){
     lChild = rootNode->leftChild;
     rChild = rootNode->rightChild;
     if(rootNode->leftChild != NULL)
@@ -153,6 +161,8 @@ Node *avlRemove(Node **p2pNode, Node *remove){
           (*p2pNode)->balance = rootNode->balance;
         if((*p2pNode)->leftChild->balance == 0 && (lBalance == 1||lBalance == -1))
           (*p2pNode)->balance = rootNode->balance + 1;
+        if((*p2pNode)->leftChild->balance == 1 && lBalance == 1)
+          (*p2pNode)->balance = rootNode->balance;
       }
     }
     return replacedNode;

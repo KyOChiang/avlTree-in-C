@@ -1,13 +1,15 @@
 #include "unity.h"
 #include "CException.h"
 #include "AVL.h"
+#include "AVLInt.h"
+#include "AVLString.h"
 #include "Rotation.h"
 #include "CustomAssert.h"
 
-Node Node1, Node25, Node40, Node50, Node90, Node100, Node75, Node65, Node150, Node175, Node200, Node220, Node120, Node110, \
+NodeInt Node1, Node25, Node40, Node50, Node90, Node100, Node75, Node65, Node150, Node175, Node200, Node220, Node120, Node110, \
 Node130, Node250, Node140, Node105, Node500,  Node550,  Node450,  Node600,  Node400,  Node350,  Node330,  Node300,  Node270;
 
-void initNode(Node *node, int nodeData){
+void initNodeInt(NodeInt *node, int nodeData){
   node->balance = 0;
   node->data = nodeData;
   node->leftChild = NULL;
@@ -15,26 +17,30 @@ void initNode(Node *node, int nodeData){
 }
 
 void setUp(){
-initNode(&Node1,1);     initNode(&Node25,25);     initNode(&Node40,40);
-initNode(&Node50,50);   initNode(&Node100,100);   initNode(&Node90,90);
-initNode(&Node75,75);   initNode(&Node65,65);     initNode(&Node150,150);
-initNode(&Node175,175); initNode(&Node200,200);   initNode(&Node220,220);
-initNode(&Node120,120); initNode(&Node110,110);   initNode(&Node130,130); 
-initNode(&Node250,250); initNode(&Node140,140);   initNode(&Node105,105);
-initNode(&Node300,300); initNode(&Node330,330);   initNode(&Node350,350);
-initNode(&Node270,270); initNode(&Node400,400);   initNode(&Node450,450);
-initNode(&Node500,500); initNode(&Node550,550);   initNode(&Node600,600);
+initNodeInt(&Node1,1);     initNodeInt(&Node25,25);     initNodeInt(&Node40,40);
+initNodeInt(&Node50,50);   initNodeInt(&Node100,100);   initNodeInt(&Node90,90);
+initNodeInt(&Node75,75);   initNodeInt(&Node65,65);     initNodeInt(&Node150,150);
+initNodeInt(&Node175,175); initNodeInt(&Node200,200);   initNodeInt(&Node220,220);
+initNodeInt(&Node120,120); initNodeInt(&Node110,110);   initNodeInt(&Node130,130); 
+initNodeInt(&Node250,250); initNodeInt(&Node140,140);   initNodeInt(&Node105,105);
+initNodeInt(&Node300,300); initNodeInt(&Node330,330);   initNodeInt(&Node350,350);
+initNodeInt(&Node270,270); initNodeInt(&Node400,400);   initNodeInt(&Node450,450);
+initNodeInt(&Node500,500); initNodeInt(&Node550,550);   initNodeInt(&Node600,600);
 }
 void tearDown(){}
+
+//////////////////////////////////////////
+// Test avlAddInt to add INT node to tree
+//////////////////////////////////////////
 
 /*
  *    (empty) -> (1)
  *
  */
 
-void test_avlAdd_should_add_one_node_to_empty_root(){
-  Node *root = NULL;
-  root = avlAdd(root,&Node1);
+void test_avlAddInt_should_add_one_node_to_empty_root(){
+  NodeInt *root = NULL;
+  root = (NodeInt *)avlAddInt(root,&Node1);
   
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
 }
@@ -46,11 +52,11 @@ void test_avlAdd_should_add_one_node_to_empty_root(){
  *
  */
 
-void test_avlAdd_should_add_1_50(){
-  Node *root = NULL;
+void test_avlAddInt_should_add_1_50(){
+  NodeInt *root = NULL;
   
-  root = avlAdd(root,&Node1);
-  root = avlAdd(root,&Node50);
+  root = (NodeInt *)avlAddInt(root,&Node1);
+  root = (NodeInt *)avlAddInt(root,&Node50);
   
   TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node50,1,&Node1);
 }
@@ -63,12 +69,12 @@ void test_avlAdd_should_add_1_50(){
  *        (100)
  */
 
-void test_avlAdd_should_add_from_1_50_100(){
-  Node *root = NULL;
+void test_avlAddInt_should_add_from_1_50_100(){
+  NodeInt *root = NULL;
   
-  root = avlAdd(root,&Node1);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node100);
+  root = (NodeInt *)avlAddInt(root,&Node1);
+  root = (NodeInt *)avlAddInt(root,&Node50);
+  root = (NodeInt *)avlAddInt(root,&Node100);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node100,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node100);
@@ -82,15 +88,15 @@ void test_avlAdd_should_add_from_1_50_100(){
  *
  */
 
-void test_avlAdd_should_not_add_node50_to_1_50(){
+void test_avlAddInt_should_not_add_node50_to_1_50(){
   CEXCEPTION_T ERR;
-  Node *root = NULL;
+  NodeInt *root = NULL;
   
-  root = avlAdd(root,&Node1);
-  root = avlAdd(root,&Node50);
+  root = (NodeInt *)avlAddInt(root,&Node1);
+  root = (NodeInt *)avlAddInt(root,&Node50);
   
   Try{
-		root = avlAdd(root,&Node50);
+		root = (NodeInt *)avlAddInt(root,&Node50);
 	} Catch(ERR){
 		TEST_ASSERT_EQUAL(ERR_INVALID_EQUAL_DATA,ERR);
 	}
@@ -105,13 +111,13 @@ void test_avlAdd_should_not_add_node50_to_1_50(){
  *                           (75)
  */
 
-void test_avlAdd_should_add_from_1_50_100_75(){
-  Node *root = NULL;
+void test_avlAddInt_should_add_from_1_50_100_75(){
+  NodeInt *root = NULL;
   
-  root = avlAdd(root,&Node1);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node100);
-  root = avlAdd(root,&Node75);
+  root = (NodeInt *)avlAddInt(root,&Node1);
+  root = (NodeInt *)avlAddInt(root,&Node50);
+  root = (NodeInt *)avlAddInt(root,&Node100);
+  root = (NodeInt *)avlAddInt(root,&Node75);
   
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node100,1,&Node50);
@@ -128,14 +134,14 @@ void test_avlAdd_should_add_from_1_50_100_75(){
  *       (75)             (75)   (150)
  */
 
-void test_avlAdd_should_add_from_1_50_100_75_150(){
-  Node *root = NULL;
+void test_avlAddInt_should_add_from_1_50_100_75_150(){
+  NodeInt *root = NULL;
   
-  root = avlAdd(root,&Node1);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node100);
-  root = avlAdd(root,&Node75);
-  root = avlAdd(root,&Node150);
+  root = (NodeInt *)avlAddInt(root,&Node1);
+  root = (NodeInt *)avlAddInt(root,&Node50);
+  root = (NodeInt *)avlAddInt(root,&Node100);
+  root = (NodeInt *)avlAddInt(root,&Node75);
+  root = (NodeInt *)avlAddInt(root,&Node150);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node100,1,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(&Node75,&Node150,0,&Node100);
@@ -154,15 +160,15 @@ void test_avlAdd_should_add_from_1_50_100_75_150(){
  *                                         (200)
  */
 
-void test_avlAdd_should_add_from_1_50_100_75_150_200(){
-  Node *root = NULL;
+void test_avlAddInt_should_add_from_1_50_100_75_150_200(){
+  NodeInt *root = NULL;
   
-  root = avlAdd(root,&Node1);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node100);
-  root = avlAdd(root,&Node75);
-  root = avlAdd(root,&Node150);
-  root = avlAdd(root,&Node200);
+  root = (NodeInt *)avlAddInt(root,&Node1);
+  root = (NodeInt *)avlAddInt(root,&Node50);
+  root = (NodeInt *)avlAddInt(root,&Node100);
+  root = (NodeInt *)avlAddInt(root,&Node75);
+  root = (NodeInt *)avlAddInt(root,&Node150);
+  root = (NodeInt *)avlAddInt(root,&Node200);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node50,&Node150,0,&Node100);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node75,0,&Node50);
@@ -182,16 +188,16 @@ void test_avlAdd_should_add_from_1_50_100_75_150_200(){
  *             add this
  */
 
-void test_avlAdd_should_add_from_1_50_100_75_150_200_120(){
-  Node *root = NULL;
+void test_avlAddInt_should_add_from_1_50_100_75_150_200_120(){
+  NodeInt *root = NULL;
   
-  root = avlAdd(root,&Node1);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node100);
-  root = avlAdd(root,&Node75);
-  root = avlAdd(root,&Node150);
-  root = avlAdd(root,&Node200);
-  root = avlAdd(root,&Node120);
+  root = (NodeInt *)avlAddInt(root,&Node1);
+  root = (NodeInt *)avlAddInt(root,&Node50);
+  root = (NodeInt *)avlAddInt(root,&Node100);
+  root = (NodeInt *)avlAddInt(root,&Node75);
+  root = (NodeInt *)avlAddInt(root,&Node150);
+  root = (NodeInt *)avlAddInt(root,&Node200);
+  root = (NodeInt *)avlAddInt(root,&Node120);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node50,&Node150,0,&Node100);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node75,0,&Node50);
@@ -215,20 +221,20 @@ void test_avlAdd_should_add_from_1_50_100_75_150_200_120(){
  *
  */
 
-void test_avlAdd_should_add_from_1_50_100_75_150_200_120_110_130_250_140(){
-  Node *root = NULL;
+void test_avlAddInt_should_add_from_1_50_100_75_150_200_120_110_130_250_140(){
+  NodeInt *root = NULL;
   
-  root = avlAdd(root,&Node1);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node100);
-  root = avlAdd(root,&Node75);
-  root = avlAdd(root,&Node150);
-  root = avlAdd(root,&Node200);
-  root = avlAdd(root,&Node120);
-  root = avlAdd(root,&Node110);
-  root = avlAdd(root,&Node130);
-  root = avlAdd(root,&Node250);
-  root = avlAdd(root,&Node140);
+  root = (NodeInt *)avlAddInt(root,&Node1);
+  root = (NodeInt *)avlAddInt(root,&Node50);
+  root = (NodeInt *)avlAddInt(root,&Node100);
+  root = (NodeInt *)avlAddInt(root,&Node75);
+  root = (NodeInt *)avlAddInt(root,&Node150);
+  root = (NodeInt *)avlAddInt(root,&Node200);
+  root = (NodeInt *)avlAddInt(root,&Node120);
+  root = (NodeInt *)avlAddInt(root,&Node110);
+  root = (NodeInt *)avlAddInt(root,&Node130);
+  root = (NodeInt *)avlAddInt(root,&Node250);
+  root = (NodeInt *)avlAddInt(root,&Node140);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node100,&Node150,0,&Node120);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node75,0,&Node50);
@@ -256,20 +262,20 @@ void test_avlAdd_should_add_from_1_50_100_75_150_200_120_110_130_250_140(){
  *
  */
 
-void test_avlAdd_should_add_from_1_50_100_75_150_200_120_110_130_250_105(){
-  Node *root = NULL;
+void test_avlAddInt_should_add_from_1_50_100_75_150_200_120_110_130_250_105(){
+  NodeInt *root = NULL;
   
-  root = avlAdd(root,&Node1);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node100);
-  root = avlAdd(root,&Node75);
-  root = avlAdd(root,&Node150);
-  root = avlAdd(root,&Node200);
-  root = avlAdd(root,&Node120);
-  root = avlAdd(root,&Node110);
-  root = avlAdd(root,&Node130);
-  root = avlAdd(root,&Node250);
-  root = avlAdd(root,&Node105);
+  root = (NodeInt *)avlAddInt(root,&Node1);
+  root = (NodeInt *)avlAddInt(root,&Node50);
+  root = (NodeInt *)avlAddInt(root,&Node100);
+  root = (NodeInt *)avlAddInt(root,&Node75);
+  root = (NodeInt *)avlAddInt(root,&Node150);
+  root = (NodeInt *)avlAddInt(root,&Node200);
+  root = (NodeInt *)avlAddInt(root,&Node120);
+  root = (NodeInt *)avlAddInt(root,&Node110);
+  root = (NodeInt *)avlAddInt(root,&Node130);
+  root = (NodeInt *)avlAddInt(root,&Node250);
+  root = (NodeInt *)avlAddInt(root,&Node105);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node100,&Node150,0,&Node120);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node75,0,&Node50);
@@ -291,11 +297,11 @@ void test_avlAdd_should_add_from_1_50_100_75_150_200_120_110_130_250_105(){
  *
  */
 
-void test_avlAdd_should_add_50_1(){
-  Node *root = NULL;
+void test_avlAddInt_should_add_50_1(){
+  NodeInt *root = NULL;
   
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node1);
+  root = (NodeInt *)avlAddInt(root,&Node50);
+  root = (NodeInt *)avlAddInt(root,&Node1);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,NULL,-1,&Node50);
 }
@@ -307,34 +313,38 @@ void test_avlAdd_should_add_50_1(){
  *
  */
 
-void test_avlAdd_should_add_50_1_75(){
-  Node *root = NULL;
+void test_avlAddInt_should_add_50_1_75(){
+  NodeInt *root = NULL;
   
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node1);
-  root = avlAdd(root,&Node75);
+  root = (NodeInt *)avlAddInt(root,&Node50);
+  root = (NodeInt *)avlAddInt(root,&Node1);
+  root = (NodeInt *)avlAddInt(root,&Node75);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node75,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node75);
 }
 
-void test_avlRemove_fail_to_remove_and_return_NULL_if_root_is_NULL(){
-  Node *root = NULL;
-  Node *removedNode;
-  removedNode = avlRemove(&root,&Node1);
+void test_avlRemoveInt_fail_to_remove_and_return_NULL_if_root_is_NULL(){
+  NodeInt *root = NULL;
+  NodeInt *removedNode;
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node1);
   TEST_ASSERT_EQUAL_PTR(NULL,removedNode);
 }
+
+//////////////////////////////////////////////////
+// Test avlGetReplacer to obtan the replace node
+//////////////////////////////////////////////////
 
 /*
  *    (root) -> (1)  => (root) -> empty
  */
 
 void test_avlGetReplacer_should_return_the_replace_node_from_1_node(){
-  Node *root = NULL;
-  root = avlAdd(root, &Node1);
-  Node *replacedNode;
-  replacedNode = avlGetReplacer(&root);
+  NodeInt *root = NULL;
+  root = (NodeInt *) avlAddInt(root, &Node1);
+  NodeInt *replacedNode;
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_PTR(&Node1,replacedNode);
   TEST_ASSERT_EQUAL_PTR(NULL,root);
@@ -345,14 +355,12 @@ void test_avlGetReplacer_should_return_the_replace_node_from_1_node(){
  */
 
 void test_avlGetReplacer_should_return_the_replace_node_from_2_node(){
-  Node *root = NULL; Node *replacedNode;
-  root = avlAdd(root, &Node1);
-  root = avlAdd(root, &Node50);
+  NodeInt *root = NULL; NodeInt *replacedNode;
+  root = (NodeInt *) avlAddInt(root, &Node1);
+  root = (NodeInt *) avlAddInt(root, &Node50);
   TEST_ASSERT_EQUAL_PTR(&Node50,Node1.rightChild);
   
-  // printf("%p\n", &Node1);
-  // printf("%p\n---------\n", &Node50);
-  replacedNode = avlGetReplacer(&root);
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_PTR(&Node50,replacedNode);
   TEST_ASSERT_EQUAL_PTR(&Node1,root);
@@ -368,11 +376,11 @@ void test_avlGetReplacer_should_return_the_replace_node_from_2_node(){
  */
 
 void test_avlGetReplacer_should_return_the_replace_node_from_50_1(){
-  Node *root = NULL; Node *replacedNode;
-  root = avlAdd(root, &Node50);
-  root = avlAdd(root, &Node1);
+  NodeInt *root = NULL; NodeInt *replacedNode;
+  root = (NodeInt *) avlAddInt(root, &Node50);
+  root = (NodeInt *) avlAddInt(root, &Node1);
 
-  replacedNode = avlGetReplacer(&root);
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_PTR(&Node50,replacedNode);
   TEST_ASSERT_EQUAL_PTR(&Node1,root);
@@ -390,12 +398,12 @@ void test_avlGetReplacer_should_return_the_replace_node_from_50_1(){
  */
 
 void test_avlGetReplacer_should_return_the_replace_node150_from_25_50_150(){
-  Node *root = NULL; Node *replacedNode;
-  root = avlAdd(root, &Node25);
-  root = avlAdd(root, &Node50);
-  root = avlAdd(root, &Node150);
+  NodeInt *root = NULL; NodeInt *replacedNode;
+  root = (NodeInt *) avlAddInt(root, &Node25);
+  root = (NodeInt *) avlAddInt(root, &Node50);
+  root = (NodeInt *) avlAddInt(root, &Node150);
 
-  replacedNode = avlGetReplacer(&root);
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,NULL,-1,&Node50);
   TEST_ASSERT_EQUAL_PTR(&Node150,replacedNode);
@@ -412,13 +420,13 @@ void test_avlGetReplacer_should_return_the_replace_node150_from_25_50_150(){
  */
  
 void test_avlGetReplacer_should_return_the_replace_node200_from_25_50_200_150(){
-  Node *root = NULL; Node *replacedNode;
-  root = avlAdd(root, &Node25);
-  root = avlAdd(root, &Node50);
-  root = avlAdd(root, &Node200);
-  root = avlAdd(root, &Node150);
+  NodeInt *root = NULL; NodeInt *replacedNode;
+  root = (NodeInt *) avlAddInt(root, &Node25);
+  root = (NodeInt *) avlAddInt(root, &Node50);
+  root = (NodeInt *) avlAddInt(root, &Node200);
+  root = (NodeInt *) avlAddInt(root, &Node150);
 
-  replacedNode = avlGetReplacer(&root);
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node150,0,&Node50);
   TEST_ASSERT_EQUAL_PTR(&Node200,replacedNode);
@@ -435,14 +443,14 @@ void test_avlGetReplacer_should_return_the_replace_node200_from_25_50_200_150(){
  */
  
 void test_avlGetReplacer_should_return_the_replace_node220_from_25_50_200_150_220(){
-  Node *root = NULL; Node *replacedNode;
-  root = avlAdd(root, &Node25);
-  root = avlAdd(root, &Node50);
-  root = avlAdd(root, &Node200);
-  root = avlAdd(root, &Node150);
-  root = avlAdd(root, &Node220);
+  NodeInt *root = NULL; NodeInt *replacedNode;
+  root = (NodeInt *) avlAddInt(root, &Node25);
+  root = (NodeInt *) avlAddInt(root, &Node50);
+  root = (NodeInt *) avlAddInt(root, &Node200);
+  root = (NodeInt *) avlAddInt(root, &Node150);
+  root = (NodeInt *) avlAddInt(root, &Node220);
 
-  replacedNode = avlGetReplacer(&root);
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node200,1,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(&Node150,NULL,-1,&Node200);
@@ -458,11 +466,11 @@ void test_avlGetReplacer_should_return_the_replace_node220_from_25_50_200_150_22
  */
 
  void test_avlGetReplacer_should_return_the_replace_node200_from_50_200(){
-  Node *root = NULL; Node *replacedNode;
-  root = avlAdd(root, &Node50);
-  root = avlAdd(root, &Node200);
+  NodeInt *root = NULL; NodeInt *replacedNode;
+  root = (NodeInt *) avlAddInt(root, &Node50);
+  root = (NodeInt *) avlAddInt(root, &Node200);
 
-  replacedNode = avlGetReplacer(&root);
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node50);
 }
@@ -480,14 +488,14 @@ void test_avlGetReplacer_should_return_the_replace_node220_from_25_50_200_150_22
  */
  
 void test_avlGetReplacer_should_return_the_replace_node250_from_1_25_50_200_150_250_220(){
-  Node *root = NULL; Node *replacedNode;
-  root = avlAdd(root, &Node25);
-  root = avlAdd(root, &Node50);
-  root = avlAdd(root, &Node200);
-  root = avlAdd(root, &Node150);
-  root = avlAdd(root, &Node250);
-  root = avlAdd(root, &Node220);
-  root = avlAdd(root, &Node1);
+  NodeInt *root = NULL; NodeInt *replacedNode;
+  root = (NodeInt *) avlAddInt(root, &Node25);
+  root = (NodeInt *) avlAddInt(root, &Node50);
+  root = (NodeInt *) avlAddInt(root, &Node200);
+  root = (NodeInt *) avlAddInt(root, &Node150);
+  root = (NodeInt *) avlAddInt(root, &Node250);
+  root = (NodeInt *) avlAddInt(root, &Node220);
+  root = (NodeInt *) avlAddInt(root, &Node1);
   
   /*printf("1 : %p\n", &Node1);
   printf("25 : %p\n", &Node25);
@@ -497,7 +505,7 @@ void test_avlGetReplacer_should_return_the_replace_node250_from_1_25_50_200_150_
   printf("220 : %p\n", &Node220);
   printf("250 : %p\n", &Node250);*/
   
-  root = rightRotate(root);
+  root = (NodeInt *)rightRotate((Node *)root);
   
   /*TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node200,1,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,NULL,-1,&Node25);
@@ -507,7 +515,7 @@ void test_avlGetReplacer_should_return_the_replace_node250_from_1_25_50_200_150_
   TEST_ASSERT_EQUAL_AVL_Node(&Node150,&Node250,1,&Node200);
   TEST_ASSERT_EQUAL_AVL_Node(&Node220,NULL,-1,&Node250);*/
 
-  replacedNode = avlGetReplacer(&root);
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node200,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(&Node150,&Node220,0,&Node200);
@@ -525,18 +533,18 @@ void test_avlGetReplacer_should_return_the_replace_node250_from_1_25_50_200_150_
  */
 
 void test_avlGetReplacer_should_return_the_replace_node150_from_1_25_50_150(){
-  Node *root = NULL; Node *replacedNode;
-  root = avlAdd(root, &Node25);
-  root = avlAdd(root, &Node50);
-  root = avlAdd(root, &Node150);
-  root = avlAdd(root, &Node1);
+  NodeInt *root = NULL; NodeInt *replacedNode;
+  root = (NodeInt *) avlAddInt(root, &Node25);
+  root = (NodeInt *) avlAddInt(root, &Node50);
+  root = (NodeInt *) avlAddInt(root, &Node150);
+  root = (NodeInt *) avlAddInt(root, &Node1);
   
   /*printf("1 : %p\n", &Node1);
   printf("25 : %p\n", &Node25);
   printf("50 : %p\n", &Node50);
   printf("150 : %p\n", &Node150);*/
  
-  replacedNode = avlGetReplacer(&root);
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node50,0,&Node25);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
@@ -557,15 +565,15 @@ void test_avlGetReplacer_should_return_the_replace_node150_from_1_25_50_150(){
  */
  
 void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_40_75_200_150_100(){
-  Node *root = NULL; Node *replacedNode;
-  root = avlAdd(root, &Node25);
-  root = avlAdd(root, &Node100);
-  root = avlAdd(root, &Node150);
-  root = avlAdd(root, &Node200);
-  root = avlAdd(root, &Node1);
-  root = avlAdd(root, &Node50);
-  root = avlAdd(root, &Node40);
-  root = avlAdd(root, &Node75);
+  NodeInt *root = NULL; NodeInt *replacedNode;
+  root = (NodeInt *) avlAddInt(root, &Node25);
+  root = (NodeInt *) avlAddInt(root, &Node100);
+  root = (NodeInt *) avlAddInt(root, &Node150);
+  root = (NodeInt *) avlAddInt(root, &Node200);
+  root = (NodeInt *) avlAddInt(root, &Node1);
+  root = (NodeInt *) avlAddInt(root, &Node50);
+  root = (NodeInt *) avlAddInt(root, &Node40);
+  root = (NodeInt *) avlAddInt(root, &Node75);
   
   /*TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node150,-1,&Node100);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node50,1,&Node25);
@@ -576,7 +584,7 @@ void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_40_75_20
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node200);
   TEST_ASSERT_EQUAL_AVL_Node(&Node40,&Node75,0,&Node50);*/
 
-  replacedNode = avlGetReplacer(&root);
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node100,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(&Node75,&Node150,0,&Node100);
@@ -601,14 +609,14 @@ void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_40_75_20
  */
 
 void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_75_200_150_100(){
-  Node *root = NULL; Node *replacedNode;
-  root = avlAdd(root, &Node25);
-  root = avlAdd(root, &Node100);
-  root = avlAdd(root, &Node150);
-  root = avlAdd(root, &Node50);
-  root = avlAdd(root, &Node1);
-  root = avlAdd(root, &Node75);
-  root = avlAdd(root, &Node200);
+  NodeInt *root = NULL; NodeInt *replacedNode;
+  root = (NodeInt *) avlAddInt(root, &Node25);
+  root = (NodeInt *) avlAddInt(root, &Node100);
+  root = (NodeInt *) avlAddInt(root, &Node150);
+  root = (NodeInt *) avlAddInt(root, &Node50);
+  root = (NodeInt *) avlAddInt(root, &Node1);
+  root = (NodeInt *) avlAddInt(root, &Node75);
+  root = (NodeInt *) avlAddInt(root, &Node200);
   
   /*printf("1 : %p\n", &Node1);
   printf("25 : %p\n", &Node25);
@@ -618,8 +626,8 @@ void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_75_200_1
   printf("150 : %p\n", &Node150);
   printf("200 : %p\n", &Node200);*/
   
-  root = leftRotate(root);
-  root->leftChild = rightRotate(root->leftChild);
+  root = (NodeInt *)leftRotate((Node *)root);
+  root->leftChild = (NodeInt *)rightRotate((Node *)(root->leftChild));
   
   /*TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node150,-1,&Node100);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node50,1,&Node25);
@@ -630,7 +638,7 @@ void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_75_200_1
   TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node75,1,&Node50);*/
   
 
-  replacedNode = avlGetReplacer(&root);
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node100,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(&Node75,&Node150,0,&Node100);
@@ -654,7 +662,7 @@ void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_75_200_1
  */
  
 void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_40_200_150_100(){
-  Node *root = NULL; Node *replacedNode;
+  NodeInt *root = NULL; NodeInt *replacedNode;
   root = &Node100;
   root->leftChild = &Node25;
   root->rightChild = &Node150;
@@ -668,7 +676,7 @@ void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_40_200_1
   Node150.balance =1 ;
   Node50.balance = -1;
   
-  replacedNode = avlGetReplacer(&root);
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node100,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node150,1,&Node100);
@@ -692,7 +700,7 @@ void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_40_200_1
  */
 
 void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_40_75_100_200_150(){
-  Node *root = NULL; Node *replacedNode;
+  NodeInt *root = NULL; NodeInt *replacedNode;
   root = &Node100;
   root->leftChild = &Node40;
   root->rightChild = &Node150;
@@ -707,7 +715,7 @@ void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_40_75_10
   Node150.balance = 1 ;
   Node75.balance = -1;
   
-  replacedNode = avlGetReplacer(&root);
+  replacedNode = (NodeInt *) avlGetReplacer((Node **)&root);
   
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node100,1,&Node40);
   TEST_ASSERT_EQUAL_AVL_Node(&Node75,&Node150,-1,&Node100);
@@ -719,20 +727,19 @@ void test_avlGetReplacer_should_return_the_replace_node200_from_1_25_50_40_75_10
   TEST_ASSERT_EQUAL_PTR(&Node200,replacedNode);
 }
  
-////////////////////////////////////////////////////////////
-// Test avlRemove() on deletion of node on the left subtree
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+// Test (NodeInt *)avlRemoveInt() on deletion of node on the left subtree
+////////////////////////////////////////////////////////
 /**
  *      50  => NULL
  *
  * where 50 is being removed 
  */
  
-void test_avlRemove_should_remove_node50_and_return(){
-  Node *root = NULL, *removedNode;
-  root = avlAdd(root,&Node50);
-  
-  removedNode = avlRemove(&root, &Node50);
+void test_avlRemoveInt_should_remove_node50_and_return(){
+  NodeInt *root = NULL, *removedNode;
+  root = (NodeInt *) avlAddInt(root,&Node50);
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node50);
   TEST_ASSERT_NULL(root);
   TEST_ASSERT_EQUAL_PTR(&Node50,removedNode);
 }
@@ -747,14 +754,14 @@ void test_avlRemove_should_remove_node50_and_return(){
  * Attempt to remove 1, which cannot be found in the tree.
  */
  
-void test_avlRemove_should_remove_nothing_and_return_node1(){
-  Node *root = NULL, *removedNode;
-  root = avlAdd(root,&Node25);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node150);
-  root = avlAdd(root,&Node200);
+void test_avlRemoveInt_should_remove_nothing_and_return_node1(){
+  NodeInt *root = NULL, *removedNode;
+  root = (NodeInt *) avlAddInt(root,&Node25);
+  root = (NodeInt *) avlAddInt(root,&Node50);
+  root = (NodeInt *) avlAddInt(root,&Node150);
+  root = (NodeInt *) avlAddInt(root,&Node200);
   
-  removedNode = avlRemove(&root, &Node1);
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node1);
   TEST_ASSERT_NULL(removedNode);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node25);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node150,1,&Node50);
@@ -768,13 +775,13 @@ void test_avlRemove_should_remove_nothing_and_return_node1(){
  * where 25 is being removed
  */
  
-void test_avlRemove_should_remove_node25_and_return_node25(){
-  Node *root = NULL, *removedNode;
-  root = avlAdd(root,&Node25);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node150);
+void test_avlRemoveInt_should_remove_node25_and_return_node25(){
+  NodeInt *root = NULL, *removedNode;
+  root = (NodeInt *) avlAddInt(root,&Node25);
+  root = (NodeInt *) avlAddInt(root,&Node50);
+  root = (NodeInt *) avlAddInt(root,&Node150);
   
-  removedNode = avlRemove(&root, &Node25);
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node25);
   TEST_ASSERT_EQUAL_PTR(&Node25,removedNode);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node150,1,&Node50);
 }
@@ -789,14 +796,14 @@ void test_avlRemove_should_remove_node25_and_return_node25(){
  * where 25 is being removed
  */
  
-void test_avlRemove_should_remove_node25_and_return_node25_from_25_50_150_200(){
-  Node *root = NULL, *removedNode;
-  root = avlAdd(root,&Node25);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node150);
-  root = avlAdd(root,&Node200);
+void test_avlRemoveInt_should_remove_node25_and_return_node25_from_25_50_150_200(){
+  NodeInt *root = NULL, *removedNode;
+  root = (NodeInt *) avlAddInt(root,&Node25);
+  root = (NodeInt *) avlAddInt(root,&Node50);
+  root = (NodeInt *) avlAddInt(root,&Node150);
+  root = (NodeInt *) avlAddInt(root,&Node200);
 
-  removedNode = avlRemove(&root, &Node25);
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node25);
   TEST_ASSERT_EQUAL_PTR(&Node25,removedNode);
   TEST_ASSERT_EQUAL_AVL_Node(&Node50,&Node200,0,&Node150);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node50);
@@ -813,8 +820,8 @@ void test_avlRemove_should_remove_node25_and_return_node25_from_25_50_150_200(){
  * where 25 is being removed
  */
 
-void test_avlRemove_should_remove_node25_and_return_node25_from_1_25_50_150_200(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_remove_node25_and_return_node25_from_1_25_50_150_200(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node50;
   Node50.leftChild = &Node25;
   Node25.leftChild = &Node1;
@@ -827,7 +834,7 @@ void test_avlRemove_should_remove_node25_and_return_node25_from_1_25_50_150_200(
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,NULL,-1,&Node25);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node200,1,&Node150);
   
-  removedNode = avlRemove(&root, &Node25);
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node25);
   TEST_ASSERT_EQUAL_PTR(&Node25,removedNode);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node200,1,&Node150);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node150,1,&Node50);
@@ -847,8 +854,8 @@ void test_avlRemove_should_remove_node25_and_return_node25_from_1_25_50_150_200(
  * where 1 is being removed
  */
  
-void test_avlRemove_should_remove_node1_and_return_node1_from_1_25_100_150_200_220_120_175(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_remove_node1_and_return_node1_from_1_25_100_150_200_220_120_175(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node100;
   Node100.leftChild = &Node25;
   Node100.rightChild = &Node200;
@@ -861,7 +868,7 @@ void test_avlRemove_should_remove_node1_and_return_node1_from_1_25_100_150_200_2
   Node100.balance = 1;
   Node200.balance = -1;
   
-  removedNode = avlRemove(&root, &Node1);
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node1);
   TEST_ASSERT_EQUAL_PTR(&Node1,removedNode);
   TEST_ASSERT_EQUAL_AVL_Node(&Node100,&Node200,0,&Node150);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node120,0,&Node100);
@@ -884,8 +891,8 @@ void test_avlRemove_should_remove_node1_and_return_node1_from_1_25_100_150_200_2
  * where 1 is being removed
  */
 
-void test_avlRemove_should_remove_node1_and_return_node1_from_1_25_100_150_200_220_120(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_remove_node1_and_return_node1_from_1_25_100_150_200_220_120(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node100;
   Node100.leftChild = &Node25;
   Node100.rightChild = &Node200;
@@ -898,7 +905,7 @@ void test_avlRemove_should_remove_node1_and_return_node1_from_1_25_100_150_200_2
   Node150.balance = -1;
   Node200.balance = -1;
   
-  removedNode = avlRemove(&root, &Node1);
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node1);
   TEST_ASSERT_EQUAL_PTR(&Node1,removedNode);
   TEST_ASSERT_EQUAL_AVL_Node(&Node100,&Node200,0,&Node150);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node120,0,&Node100);
@@ -920,8 +927,8 @@ void test_avlRemove_should_remove_node1_and_return_node1_from_1_25_100_150_200_2
  * where 1 is being removed
  */
 
-void test_avlRemove_should_remove_node1_and_return_node1_from_1_25_100_150_200_220_175(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_remove_node1_and_return_node1_from_1_25_100_150_200_220_175(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node100;
   Node100.leftChild = &Node25;
   Node100.rightChild = &Node200;
@@ -934,7 +941,7 @@ void test_avlRemove_should_remove_node1_and_return_node1_from_1_25_100_150_200_2
   Node150.balance = 1;
   Node200.balance = -1;
   
-  removedNode = avlRemove(&root, &Node1);
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node1);
   TEST_ASSERT_EQUAL_PTR(&Node1,removedNode);
   TEST_ASSERT_EQUAL_AVL_Node(&Node100,&Node200,0,&Node150);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,NULL,-1,&Node100);
@@ -956,8 +963,8 @@ void test_avlRemove_should_remove_node1_and_return_node1_from_1_25_100_150_200_2
  * where 1 is being removed
  */
 
-void test_avlRemove_should_remove_node1_and_return_node1_from_1_25_100_150_200_220_175_250(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_remove_node1_and_return_node1_from_1_25_100_150_200_220_175_250(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node100;
   Node100.leftChild = &Node25;
   Node100.rightChild = &Node200;
@@ -971,7 +978,7 @@ void test_avlRemove_should_remove_node1_and_return_node1_from_1_25_100_150_200_2
   Node150.balance = 1;
   Node220.balance = 1;
   
-  removedNode = avlRemove(&root, &Node1);
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node1);
   TEST_ASSERT_EQUAL_PTR(&Node1,removedNode);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node175,1,&Node150);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node150,1,&Node100);
@@ -992,14 +999,14 @@ void test_avlRemove_should_remove_node1_and_return_node1_from_1_25_100_150_200_2
  * where 25 is being removed
  */
 
-void test_avlRemove_should_remove_node25_and_return_node25_from_25_40_50_200(){
-  Node *root = NULL, *removedNode;
-  root = avlAdd(root,&Node25);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node200);
-  root = avlAdd(root,&Node40);
+void test_avlRemoveInt_should_remove_node25_and_return_node25_from_25_40_50_200(){
+  NodeInt *root = NULL, *removedNode;
+  root = (NodeInt *) avlAddInt(root,&Node25);
+  root = (NodeInt *) avlAddInt(root,&Node50);
+  root = (NodeInt *) avlAddInt(root,&Node200);
+  root = (NodeInt *) avlAddInt(root,&Node40);
 
-  removedNode = avlRemove(&root, &Node25);
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node25);
   TEST_ASSERT_EQUAL_PTR(&Node25,removedNode);
   TEST_ASSERT_EQUAL_AVL_Node(&Node40,&Node200,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node40);
@@ -1016,20 +1023,20 @@ void test_avlRemove_should_remove_node25_and_return_node25_from_25_40_50_200(){
  * where 25 is being removed
  */
 
-void test_avlRemove_should_remove_node25_and_return_node25_from_1_25_40_50_200(){
-  Node *root = NULL, *removedNode;
-  root = avlAdd(root,&Node25);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node200);
-  root = avlAdd(root,&Node40);
-  root = avlAdd(root,&Node1);
+void test_avlRemoveInt_should_remove_node25_and_return_node25_from_1_25_40_50_200(){
+  NodeInt *root = NULL, *removedNode;
+  root = (NodeInt *) avlAddInt(root,&Node25);
+  root = (NodeInt *) avlAddInt(root,&Node50);
+  root = (NodeInt *) avlAddInt(root,&Node200);
+  root = (NodeInt *) avlAddInt(root,&Node40);
+  root = (NodeInt *) avlAddInt(root,&Node1);
 
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node200,-1,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node40,0,&Node25);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node200);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node40);
-  removedNode = avlRemove(&root, &Node25);
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node25);
   TEST_ASSERT_EQUAL_PTR(&Node25,removedNode);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node200,-1,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node40,1,&Node1);
@@ -1049,8 +1056,8 @@ void test_avlRemove_should_remove_node25_and_return_node25_from_1_25_40_50_200()
  * where 150 is being removed
  */
 
-void test_avlRemove_should_remove_node150_and_return_node150_from_1_25_50_90_150_200_250(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_remove_node150_and_return_node150_from_1_25_50_90_150_200_250(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node150;
   Node150.leftChild = &Node25;
   Node25.leftChild = &Node1;
@@ -1069,11 +1076,11 @@ void test_avlRemove_should_remove_node150_and_return_node150_from_1_25_50_90_150
   printf("Node 25 : %p\n", &Node25);
   printf("Node 1 : %p\n", &Node1);*/
   
-  removedNode = avlRemove(&root, &Node150);
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node150);
   TEST_ASSERT_EQUAL_PTR(&Node150,removedNode);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node200,0,&Node90);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node50,0,&Node25);
-  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node40);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node250);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node250,1,&Node200);
@@ -1091,9 +1098,34 @@ void test_avlRemove_should_remove_node150_and_return_node150_from_1_25_50_90_150
  * where 150 is being removed
  */
 
-/////////////////////////////////////////////////////////////
-// Test avlRemove() on deletion of node on the right subtree
-/////////////////////////////////////////////////////////////
+void test_avlRemoveInt_should_remove_node150_and_return_node150_from_1_25_50_40_90_150_200_250(){
+  NodeInt *root = NULL, *removedNode;
+  root = &Node150;
+  Node150.leftChild = &Node25;
+  Node25.leftChild = &Node1;
+  Node150.rightChild = &Node200;
+  Node25.rightChild = &Node50;
+  Node50.leftChild = &Node40;
+  Node50.rightChild = &Node90;
+  Node200.rightChild = &Node250;
+  Node150.balance = -1;
+  Node25.balance = 1;
+  Node200.balance = 1;
+  
+  removedNode = (NodeInt *)avlRemoveInt(&root, &Node150);
+  TEST_ASSERT_EQUAL_PTR(&Node150,removedNode);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node200,-1,&Node90);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node50,1,&Node25);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node40);
+  TEST_ASSERT_EQUAL_AVL_Node(&Node40,NULL,-1,&Node50);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node250);
+  TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node250,1,&Node200);
+}
+
+/////////////////////////////////////////////////////////
+// Test (NodeInt *)avlRemoveInt() on deletion of node on the right subtree
+/////////////////////////////////////////////////////////
 /**
  *        50                 50
  *      /   \               /  \
@@ -1104,14 +1136,14 @@ void test_avlRemove_should_remove_node150_and_return_node150_from_1_25_50_90_150
  * Attempt to remove 200, which cannot be found in the tree.
  */
 
-void test_avlRemove_should_return_NULL_if_remove_node_not_found_in_tree(){
-  Node *root = NULL, *removedNode;
-  root = avlAdd(root,&Node25);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node150);
-  root = avlAdd(root,&Node1);
+void test_avlRemoveInt_should_return_NULL_if_remove_node_not_found_in_tree(){
+  NodeInt *root = NULL, *removedNode;
+  root = (NodeInt *) avlAddInt(root,&Node25);
+  root = (NodeInt *) avlAddInt(root,&Node50);
+  root = (NodeInt *) avlAddInt(root,&Node150);
+  root = (NodeInt *) avlAddInt(root,&Node1);
   
-  removedNode = avlRemove(&root,&Node200);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node200);
   
   TEST_ASSERT_NULL(removedNode);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node150,-1,&Node50);
@@ -1126,13 +1158,13 @@ void test_avlRemove_should_return_NULL_if_remove_node_not_found_in_tree(){
  * where 150 is being removed
  */
  
-void test_avlRemove_should_return_Node150_from_25_50_150(){
-  Node *root = NULL, *removedNode;
-  root = avlAdd(root,&Node25);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node150);
+void test_avlRemoveInt_should_return_Node150_from_25_50_150(){
+  NodeInt *root = NULL, *removedNode;
+  root = (NodeInt *) avlAddInt(root,&Node25);
+  root = (NodeInt *) avlAddInt(root,&Node50);
+  root = (NodeInt *) avlAddInt(root,&Node150);
   
-  removedNode = avlRemove(&root,&Node150);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node150);
   TEST_ASSERT_EQUAL_PTR(removedNode,&Node150);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,NULL,-1,&Node50);
 }
@@ -1147,14 +1179,14 @@ void test_avlRemove_should_return_Node150_from_25_50_150(){
  * where 150 is being removed
  */
  
-void test_avlRemove_should_return_Node150_from_1_25_50_150(){
-  Node *root = NULL, *removedNode;
-  root = avlAdd(root,&Node25);
-  root = avlAdd(root,&Node50);
-  root = avlAdd(root,&Node150);
-  root = avlAdd(root,&Node1);
+void test_avlRemoveInt_should_return_Node150_from_1_25_50_150(){
+  NodeInt *root = NULL, *removedNode;
+  root = (NodeInt *) avlAddInt(root,&Node25);
+  root = (NodeInt *) avlAddInt(root,&Node50);
+  root = (NodeInt *) avlAddInt(root,&Node150);
+  root = (NodeInt *) avlAddInt(root,&Node1);
   
-  removedNode = avlRemove(&root,&Node150);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node150);
   TEST_ASSERT_EQUAL_PTR(removedNode,&Node150);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node50,0,&Node25);
 }
@@ -1169,8 +1201,8 @@ void test_avlRemove_should_return_Node150_from_1_25_50_150(){
  * where 150 is being removed
  */
  
-void test_avlRemove_should_return_Node150_from_1_25_50_150_200(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_return_Node150_from_1_25_50_150_200(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node50;
   Node50.leftChild = &Node25;
   Node50.rightChild = &Node150;
@@ -1179,7 +1211,7 @@ void test_avlRemove_should_return_Node150_from_1_25_50_150_200(){
   Node150.balance = 1;
   Node25.balance = -1;
   
-  removedNode = avlRemove(&root,&Node150);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node150);
   TEST_ASSERT_EQUAL_PTR(removedNode,&Node150);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node200,-1,&Node50);
 }
@@ -1196,8 +1228,8 @@ void test_avlRemove_should_return_Node150_from_1_25_50_150_200(){
  * where 200 is being removed
  */
  
-void test_avlRemove_should_return_Node200_from_1_25_40_50_75_100_150_200(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_return_Node200_from_1_25_40_50_75_100_150_200(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node100;
   Node100.leftChild = &Node25;
   Node100.rightChild = &Node150;
@@ -1210,7 +1242,7 @@ void test_avlRemove_should_return_Node200_from_1_25_40_50_75_100_150_200(){
   Node150.balance = 1;
   Node25.balance = 1;
   
-  removedNode = avlRemove(&root,&Node200);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node200);
   TEST_ASSERT_EQUAL_PTR(removedNode,&Node200);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node100,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node40,0,&Node25);
@@ -1229,8 +1261,8 @@ void test_avlRemove_should_return_Node200_from_1_25_40_50_75_100_150_200(){
  * where 200 is being removed
  */
  
-void test_avlRemove_should_return_Node200_from_1_25_50_75_100_150_200(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_return_Node200_from_1_25_50_75_100_150_200(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node100;
   Node100.leftChild = &Node25;
   Node100.rightChild = &Node150;
@@ -1243,7 +1275,7 @@ void test_avlRemove_should_return_Node200_from_1_25_50_75_100_150_200(){
   Node50.balance = 1;
   Node25.balance = 1;
   
-  removedNode = avlRemove(&root,&Node200);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node200);
   TEST_ASSERT_EQUAL_PTR(removedNode,&Node200);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node100,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,NULL,-1,&Node25);
@@ -1262,8 +1294,8 @@ void test_avlRemove_should_return_Node200_from_1_25_50_75_100_150_200(){
  * where 200 is being removed
  */
  
-void test_avlRemove_should_return_Node200_from_1_25_40_50_100_150_200(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_return_Node200_from_1_25_40_50_100_150_200(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node100;
   Node100.leftChild = &Node25;
   Node100.rightChild = &Node150;
@@ -1276,7 +1308,7 @@ void test_avlRemove_should_return_Node200_from_1_25_40_50_100_150_200(){
   Node50.balance = -1;
   Node25.balance = 1;
   
-  removedNode = avlRemove(&root,&Node200);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node200);
   TEST_ASSERT_EQUAL_PTR(removedNode,&Node200);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node100,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,&Node40,0,&Node25);
@@ -1295,8 +1327,8 @@ void test_avlRemove_should_return_Node200_from_1_25_40_50_100_150_200(){
  * where 200 is being removed
  */
  
-void test_avlRemove_should_return_Node200_from_1_25_40_75_50_100_150_200(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_return_Node200_from_1_25_40_75_50_100_150_200(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node100;
   Node100.leftChild = &Node40;
   Node100.rightChild = &Node150;
@@ -1310,7 +1342,7 @@ void test_avlRemove_should_return_Node200_from_1_25_40_75_50_100_150_200(){
   Node75.balance = -1;
   Node25.balance = -1;
   
-  removedNode = avlRemove(&root,&Node200);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node200);
   TEST_ASSERT_EQUAL_PTR(removedNode,&Node200);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node100,1,&Node40);
   TEST_ASSERT_EQUAL_AVL_Node(&Node1,NULL,-1,&Node25);
@@ -1328,8 +1360,8 @@ void test_avlRemove_should_return_Node200_from_1_25_40_75_50_100_150_200(){
  * where 200 is being removed
  */
  
-void test_avlRemove_should_return_Node200_from_25_50_200_150(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_return_Node200_from_25_50_200_150(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node50;
   Node50.leftChild = &Node25;
   Node50.rightChild = &Node200;
@@ -1337,7 +1369,7 @@ void test_avlRemove_should_return_Node200_from_25_50_200_150(){
   Node200.balance = -1;
   Node50.balance = 1;
   
-  removedNode = avlRemove(&root,&Node200);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node200);
   TEST_ASSERT_EQUAL_PTR(removedNode,&Node200);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node150,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node150);
@@ -1354,8 +1386,8 @@ void test_avlRemove_should_return_Node200_from_25_50_200_150(){
  * where 200 is being removed
  */
 
-void test_avlRemove_should_return_Node200_from_25_50_200_150_220(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_return_Node200_from_25_50_200_150_220(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node50;
   Node50.leftChild = &Node25;
   Node50.rightChild = &Node200;
@@ -1363,7 +1395,7 @@ void test_avlRemove_should_return_Node200_from_25_50_200_150_220(){
   Node200.rightChild = &Node220;
   Node50.balance = 1;
   
-  removedNode = avlRemove(&root,&Node200);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node200);
   TEST_ASSERT_EQUAL_PTR(removedNode,&Node200);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node150,1,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node220,1,&Node150);
@@ -1383,8 +1415,8 @@ void test_avlRemove_should_return_Node200_from_25_50_200_150_220(){
  * where 200 is being removed
  */
  
-void test_avlRemove_should_return_Node200_from_25_50_200_150_220_175(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_return_Node200_from_25_50_200_150_220_175(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node50;
   Node50.leftChild = &Node25;
   Node50.rightChild = &Node200;
@@ -1397,7 +1429,7 @@ void test_avlRemove_should_return_Node200_from_25_50_200_150_220_175(){
   Node200.balance = -1;
   Node150.balance = 1;
   
-  removedNode = avlRemove(&root,&Node200);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node200);
   TEST_ASSERT_EQUAL_PTR(removedNode,&Node200);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node175,0,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(&Node150,&Node220,0,&Node175);
@@ -1419,8 +1451,8 @@ void test_avlRemove_should_return_Node200_from_25_50_200_150_220_175(){
  * where 200 is being removed
  */
 
-void test_avlRemove_should_return_Node200_from_25_50_200_150_220_120_175(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_return_Node200_from_25_50_200_150_220_120_175(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node50;
   Node50.leftChild = &Node25;
   Node50.rightChild = &Node200;
@@ -1441,7 +1473,7 @@ void test_avlRemove_should_return_Node200_from_25_50_200_150_220_120_175(){
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node175);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node220);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,NULL,0,&Node1);*/
-  removedNode = avlRemove(&root,&Node200);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node200);
   TEST_ASSERT_EQUAL_PTR(removedNode,&Node200);
   TEST_ASSERT_EQUAL_AVL_Node(&Node25,&Node175,1,&Node50);
   TEST_ASSERT_EQUAL_AVL_Node(&Node150,&Node220,-1,&Node175);
@@ -1468,8 +1500,8 @@ void test_avlRemove_should_return_Node200_from_25_50_200_150_220_120_175(){
  * where 400 is being removed
  */
 
-void test_avlRemove_should_return_Node200_from_20_Nodes_tree(){
-  Node *root = NULL, *removedNode;
+void test_avlRemoveInt_should_return_Node200_from_20_Nodes_tree(){
+  NodeInt *root = NULL, *removedNode;
   root = &Node175;
   Node175.leftChild = &Node100;
   Node175.rightChild = &Node400;
@@ -1517,7 +1549,7 @@ void test_avlRemove_should_return_Node200_from_20_Nodes_tree(){
   TEST_ASSERT_EQUAL_AVL_Node(&Node120,NULL,-1,&Node150);
   TEST_ASSERT_EQUAL_AVL_Node(NULL,&Node40,1,&Node25);*/
   
-  removedNode = avlRemove(&root,&Node400);
+  removedNode = (NodeInt *)avlRemoveInt(&root,&Node400);
   
   TEST_ASSERT_EQUAL_PTR(removedNode,&Node400);
   TEST_ASSERT_EQUAL_AVL_Node(&Node100,&Node350,0,&Node175);
